@@ -8,23 +8,20 @@ conectarDB();    //ejecuto la funcion que está en db.js
 
 //Crear el servidor
 const app = express();
-
-// Configurar CORS
-const whitelist = [process.env.FRONTEND_URL];
-
+//Settings CORS
+const whitelist = [process.env.FRONTEND_URL]
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.includes(origin)) {
-      // Puede consultar la API
-      callback(null, true);
-    } else {
-      // No esta permitido
-      callback(new Error("Error de Cors"));
+    origin:function(origin, callback) {
+        if(!origin){ //Postman request have not origin 
+            return callback(null, true)
+        }else if (whitelist.includes(origin)){
+            callback(null, true)
+        }else{
+            callback(new Error("Cors Error"))
+        }
     }
-  },
-};
-
-app.use(cors(corsOptions));
+}
+app.use(cors(corsOptions))
 
 //Habilitar leer los valores de un body
 app.use(express.json());

@@ -122,7 +122,6 @@ exports.editarProductos = async (req, res) => {
             producto.precio_venta_tarjeta = ((producto.precio_venta_conocidos * 109) / 100).toFixed(2)
         }
     })
-    await Producto.updateMany({creador: req.usuario.id}).select("-__v")
     res.json({productos})
 }
 
