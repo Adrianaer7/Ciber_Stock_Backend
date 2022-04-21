@@ -14,7 +14,7 @@ module.exports = emailOlvidePassword = async (datos) => {
   
   //Informacion del email
   await transport.sendMail({
-    from: '"Stock - Ciber infotel" <cuentas@stockciber.com>',
+    from: '"Stock - Ciber infotel" <adrianaerrc7@gmail.com>',
     to: email,
     subject: "Stock Ciber - Reestablece tu contraseña",
     text: "Comprueba tu cuenta",
