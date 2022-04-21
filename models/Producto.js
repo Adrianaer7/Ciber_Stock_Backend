@@ -22,6 +22,10 @@ const ProductoSchema = mongoose.Schema({
     trim: true,
     required: true,
   },
+  barras: {
+    type: Number,
+    trim: true
+  },
   rubro: {
     type: String,
     uppercase: true,

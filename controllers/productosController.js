@@ -16,7 +16,6 @@ exports.crearProducto = async (req, res, next) => {
           producto.codigo === parseInt(codigo) ? true : false
         )
         const code = boolean.includes(true)    //consulta si hay algun true en el array
-
         if(code) {  //si hay coincidencias, devuelvo msj, sino, creo el producto
             return res.status(400).json({msg: "Ya existe este codigo"})
         } 
