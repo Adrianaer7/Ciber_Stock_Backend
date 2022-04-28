@@ -23,7 +23,7 @@ const ProductoSchema = mongoose.Schema({
     required: true,
   },
   barras: {
-    type: Number,
+    type: String,
     trim: true
   },
   rubro: {

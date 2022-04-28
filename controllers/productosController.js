@@ -10,7 +10,7 @@ exports.crearProducto = async (req, res, next) => {
     }
 
     try {
-        const { codigo, nombre, marca, modelo } = req.body;
+        const { codigo, nombre, marca, modelo, barras } = req.body;
         const products = await Producto.find({ creador: req.usuario.id });  //obtengo solo los productos del usuario que esta logeado
         let boolean = products.map((producto) =>   //recorro los productos y consulto si existe un producto con el mismo codigo, devuelvo un array con false o true si coincide
           producto.codigo === parseInt(codigo) ? true : false
@@ -32,7 +32,7 @@ exports.crearProducto = async (req, res, next) => {
             producto.faltante = true
         }
 
-        producto.descripcion = codigo + " " + nombre + " " + marca + " " + modelo;
+        producto.descripcion = codigo + " " + nombre + " " + marca + " " + modelo + " " + barras;
         await producto.save()
         res.json({producto})
         
