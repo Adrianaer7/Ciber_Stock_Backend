@@ -38,6 +38,7 @@ app.use("/api/rubros", require("./routes/rubros"));
 app.use("/api/proveedores", require("./routes/proveedores"));
 app.use("/api/dolares", require("./routes/dolares"));
 app.use("/api/faltantes", require("./routes/faltantes"));
+app.use("/api/compras", require("./routes/compras"));
 
 //Arrancar la app
 app.listen(PORT, () => { //al puerto y al dominio lo va a asignar Heroku
