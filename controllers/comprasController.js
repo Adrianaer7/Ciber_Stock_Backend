@@ -11,17 +11,27 @@ exports.crearCompra = async (req, res) => {
         const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto del body
         if(producto.length == 0 || !producto) { //si a ese producto nunca se le hizo una compra, lo añado
             const laCompra = {  //creo el objeto a agregar con lo que me llega
-                nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra
+                nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor
             }
             const compra = new Compra(laCompra)
-            compra.cantidad = [req.body.cantidad]   //a la cantidad le agrego un array que comienza con lo que me llega del body
+            compra.cantidad = [parseInt(req.body.cantidad)]   //a la cantidad le agrego un array que comienza con lo que me llega del body
+            compra.valor_dolar_compra = [parseInt(valor_dolar_compra)]
+            compra.precio_compra_dolar = [parseInt(precio_compra_dolar)]
+            compra.fecha_compra = [fecha_compra]
             compra.idProducto = id  //le doy clave foranea del producto
             compra.creador = req.usuario.id
             await compra.save()
             res.json({compra})
         } else {    //si ya existe un historial de compra del producto
             const compraPasada = producto[0] //guardo el primer y unico objeto coincidente
+            compraPasada.nombre = nombre
+            compraPasada.marca = marca
+            compraPasada.modelo = modelo
+            compraPasada.proveedor = proveedor
             compraPasada.cantidad.push(req.body.cantidad) //al array de cantidad le agrego la cantidad del body
+            compraPasada.valor_dolar_compra.push(valor_dolar_compra)
+            compraPasada.precio_compra_dolar.push(precio_compra_dolar)
+            compraPasada.fecha_compra.push(fecha_compra)
             const compra = new Compra(compraPasada)
             await compra.save()
             res.json({compra})

@@ -26,20 +26,15 @@ const CompraSchema = mongoose.Schema({
     trim: true,
     required: true,
   },
-  barras: {
-    type: String,
-    trim: true
-  },
   cantidad: {
     type: Array,
   },
   precio_compra_dolar: {
-    type: Number,
+    type: Array,
   },
   valor_dolar_compra: {
-    type: Number,
-    trim: true,
-    required: true,
+    type: Array,
+
   },
   proveedor: {
     type: String,
@@ -47,7 +42,7 @@ const CompraSchema = mongoose.Schema({
     uppercase: true,
   },
   fecha_compra: {
-    type: String,
+    type: Array,
   },
   descripcion: {
     type: String,
