@@ -11,7 +11,7 @@ exports.crearCompra = async (req, res) => {
         const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto del body
         if(producto.length == 0 || !producto) { //si a ese producto nunca se le hizo una compra, lo añado
             const laCompra = {  //creo el objeto a agregar con lo que me llega
-                nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor
+                nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra
             }
             const compra = new Compra(laCompra)
             compra.cantidad = [parseInt(req.body.cantidad)]   //a la cantidad le agrego un array que comienza con lo que me llega del body
@@ -28,11 +28,15 @@ exports.crearCompra = async (req, res) => {
             compraPasada.nombre = nombre
             compraPasada.marca = marca
             compraPasada.modelo = modelo
-            compraPasada.proveedor = proveedor
             compraPasada.cantidad.push(req.body.cantidad) //al array de cantidad le agrego la cantidad del body
             compraPasada.valor_dolar_compra.push(valor_dolar_compra)
             compraPasada.precio_compra_dolar.push(precio_compra_dolar)
-            compraPasada.proveedor.push(proveedor)
+            if(!proveedor) {
+                compraPasada.proveedor.push("-")
+            } else {
+
+                compraPasada.proveedor.push(proveedor)
+            }
             compraPasada.fecha_compra.push(fecha_compra)
             const compra = new Compra(compraPasada)
             await compra.save()
