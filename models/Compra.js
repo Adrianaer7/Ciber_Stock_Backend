@@ -37,8 +37,7 @@ const CompraSchema = mongoose.Schema({
 
   },
   proveedor: {
-    type: String,
-    trim: true,
+    type: Array,
     uppercase: true,
   },
   fecha_compra: {

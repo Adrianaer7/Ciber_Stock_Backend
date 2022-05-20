@@ -17,6 +17,7 @@ exports.crearCompra = async (req, res) => {
             compra.cantidad = [parseInt(req.body.cantidad)]   //a la cantidad le agrego un array que comienza con lo que me llega del body
             compra.valor_dolar_compra = [parseInt(valor_dolar_compra)]
             compra.precio_compra_dolar = [parseInt(precio_compra_dolar)]
+            compra.proveedor = [proveedor]
             compra.fecha_compra = [fecha_compra]
             compra.idProducto = id  //le doy clave foranea del producto
             compra.creador = req.usuario.id
@@ -31,6 +32,7 @@ exports.crearCompra = async (req, res) => {
             compraPasada.cantidad.push(req.body.cantidad) //al array de cantidad le agrego la cantidad del body
             compraPasada.valor_dolar_compra.push(valor_dolar_compra)
             compraPasada.precio_compra_dolar.push(precio_compra_dolar)
+            compraPasada.proveedor.push(proveedor)
             compraPasada.fecha_compra.push(fecha_compra)
             const compra = new Compra(compraPasada)
             await compra.save()
