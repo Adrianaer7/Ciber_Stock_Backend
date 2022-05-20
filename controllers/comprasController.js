@@ -6,31 +6,26 @@ require("dotenv").config({path: 'variables.env'})  //dotenv carga variables de e
 exports.crearCompra = async (req, res) => {
     try {
         const {nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra} = req.body.producto
-        const productos = await Producto.find({codigo})
-        if(productos.length > 0) {
-            const id = productos[0]._id
-            const prod = await Compra.find({idProducto: id})
-            if(prod.length == 0 || !prod) {
-                const laCompra = {
-                    nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra
-                }
-                const compra = new Compra(laCompra)
-                compra.cantidad = [parseInt(req.body.cantidad)]
-                compra.idProducto = id
-                compra.creador = req.usuario.id
-                await compra.save()
-                res.json({compra})
-            } else {
-                console.log("else")
-                const array1 = prod[prod.length -1]
-                array1.cantidad.push(req.body.cantidad)
-                console.log(array1)
-                const compra = new Compra(array1)
-                await compra.save()
-                res.json({compra})
-                console.log(compra)
+        const productos = await Producto.find({codigo}) //busco un producto que coincida con el codigo que recibo al añadir stock
+        const id = productos[0]._id //guardo su id
+        const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto del body
+        if(producto.length == 0 || !producto) { //si a ese producto nunca se le hizo una compra, lo añado
+            const laCompra = {  //creo el objeto a agregar con lo que me llega
+                nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra
             }
-        } 
+            const compra = new Compra(laCompra)
+            compra.cantidad = [req.body.cantidad]   //a la cantidad le agrego un array que comienza con lo que me llega del body
+            compra.idProducto = id  //le doy clave foranea del producto
+            compra.creador = req.usuario.id
+            await compra.save()
+            res.json({compra})
+        } else {    //si ya existe un historial de compra del producto
+            const compraPasada = producto[0] //guardo el primer y unico objeto coincidente
+            compraPasada.cantidad.push(req.body.cantidad) //al array de cantidad le agrego la cantidad del body
+            const compra = new Compra(compraPasada)
+            await compra.save()
+            res.json({compra})
+        }
     } catch (error) {
         console.log(error)
     }
