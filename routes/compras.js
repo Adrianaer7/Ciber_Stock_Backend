@@ -3,7 +3,7 @@ const router = express.Router()
 const comprasController = require("../controllers/comprasController")
 const auth = require("../middleware/auth")
 
-const {crearCompra, traerCompras} = comprasController
+const {crearCompra, traerCompras, editarCompra} = comprasController
 
 router.post("/",
     auth,
@@ -13,6 +13,11 @@ router.post("/",
 router.get("/",
     auth,
     traerCompras
+)
+
+router.put("/:id",
+    auth,
+    editarCompra
 )
 
 module.exports = router;

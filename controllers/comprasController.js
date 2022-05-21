@@ -53,7 +53,7 @@ exports.crearCompra = async (req, res) => {
             await compra.save()
             res.json({compra})
         } */
-        const {nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra} = req.body.producto
+        const {nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra, cantidad} = req.body.producto
         const productos = await Producto.find({codigo}) //busco un producto que coincida con el codigo que recibo al añadir stock
         const id = productos[0]._id //guardo su id
         const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto de la lista de productos
@@ -62,7 +62,7 @@ exports.crearCompra = async (req, res) => {
                 nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra
             }
             const compra = new Compra(laCompra)
-            compra.cantidad = parseInt(req.body.cantidad)   //a la cantidad le agrego un array que comienza con lo que me llega del body
+            compra.cantidad = parseInt(cantidad)   //a la cantidad le agrego un array que comienza con lo que me llega del body
             compra.cantidad.reverse()
             compra.valor_dolar_compra = parseInt(valor_dolar_compra)
             compra.valor_dolar_compra.reverse()
@@ -82,6 +82,36 @@ exports.crearCompra = async (req, res) => {
             await compra.save()
             res.json({compra})
         }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.editarCompra = async(req,res) => {
+    try {
+        const {nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra, cantidad} = req.body.producto
+        const url = req.params.id
+        const productos = await Producto.find({url}) //busco un producto que coincida con el codigo que recibo al añadir stock
+        const id = productos[0]._id //guardo su id
+        const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto de la lista de productos
+        const compraPasada = producto[0] //guardo el primer y unico objeto coincidente
+        compraPasada.nombre = nombre
+        compraPasada.marca = marca
+        compraPasada.modelo = modelo
+        compraPasada.cantidad.push(cantidad) //al array de cantidad le agrego la cantidad del body
+        compraPasada.cantidad.reverse()
+        compraPasada.valor_dolar_compra.push(valor_dolar_compra)
+        compraPasada.valor_dolar_compra.reverse()
+        compraPasada.precio_compra_dolar.push(precio_compra_dolar)
+        compraPasada.precio_compra_dolar.reverse()
+        compraPasada.fecha_compra.push(fecha_compra)
+        compraPasada.fecha_compra.reverse()
+        compraPasada.creado = Date.now()
+        compraPasada.proveedor.push(proveedor)
+        compraPasada.proveedor.reverse()
+        const compra = new Compra(compraPasada)
+        await compra.save()
+        res.json({compra})
     } catch (error) {
         console.log(error)
     }

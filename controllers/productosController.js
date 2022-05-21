@@ -10,7 +10,7 @@ exports.crearProducto = async (req, res, next) => {
     }
 
     try {
-        const { codigo, nombre, marca, modelo, barras } = req.body;
+        const { codigo, nombre, marca, modelo, barras, cantidad } = req.body;
         const products = await Producto.find({ creador: req.usuario.id });  //obtengo solo los productos del usuario que esta logeado
         let boolean = products.map((producto) =>   //recorro los productos y consulto si existe un producto con el mismo codigo, devuelvo un array con false o true si coincide
           producto.codigo === parseInt(codigo) ? true : false
@@ -20,7 +20,29 @@ exports.crearProducto = async (req, res, next) => {
             return res.status(400).json({msg: "Ya existe este codigo"})
         } 
 
-        const producto = new Producto(req.body);
+        const elProducto = {
+            nombre : req.body.nombre,
+            marca : req.body.marca,
+            modelo : req.body.modelo,
+            codigo : req.body.codigo,
+            barras : req.body.barras,
+            rubro : req.body.rubro,
+            precio_venta : req.body.precio_venta,
+            precio_compra_dolar : req.body.precio_compra_dolar,
+            precio_compra_peso : req.body.precio_compra_peso,
+            valor_dolar_compra : req.body.valor_dolar_compra,
+            proveedor : req.body.proveedor,
+            fecha_compra : req.body.fecha_compra,
+            rentabilidad : req.body.rentabilidad,
+            notas : req.body.notas,
+            faltante : req.body.faltante,
+            limiteFaltante : req.body.limiteFaltante,
+            añadirFaltante : req.body.añadirFaltante,
+        }
+
+        const producto = new Producto(elProducto);
+        producto.disponibles = cantidad
+        console.log(producto)
         producto.creador = req.usuario.id;
         producto.precio_venta_tarjeta = 0
         producto.precio_venta_efectivo = 0
@@ -31,8 +53,8 @@ exports.crearProducto = async (req, res, next) => {
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
             producto.faltante = true
         }
+        producto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo).trim().replace(/\s\s+/g, ' ')
 
-        producto.descripcion = codigo + " " + nombre + " " + marca + " " + modelo + " " + barras;
         await producto.save()
         res.json({producto})
         
@@ -70,7 +92,7 @@ exports.elProducto = async (req, res, next) => {
 
 exports.editarProducto = async (req, res) => {
    try {
-       const {codigo, nombre, marca, modelo} = req.body
+       const {_id, nombre, marca, modelo, codigo, barras, rubro, precio_venta, precio_compra_dolar, precio_compra_peso, valor_dolar_compra, proveedor, fecha_compra, cantidad, disponibles, rentabilidad, notas, faltante, limiteFaltante, añadirFaltante, creado, creador, precio_venta_tarjeta, precio_venta_efectivo, precio_venta_conocidos, descripcion} = req.body
        
        let producto = await Producto.findById(req.params.id)
 
@@ -81,8 +103,28 @@ exports.editarProducto = async (req, res) => {
            return res.status(404).json({msg: "El producto no existe"})
        }
 
-       const nuevoProducto = req.body
-
+       const nuevoProducto = {}
+       nuevoProducto._id = _id
+       nuevoProducto.nombre = nombre
+       nuevoProducto.marca = marca
+       nuevoProducto.modelo = modelo
+       nuevoProducto.codigo = codigo
+       nuevoProducto.barras = barras
+       nuevoProducto.rubro = rubro
+       nuevoProducto.precio_venta = precio_venta
+       nuevoProducto.precio_compra_dolar = precio_compra_dolar
+       nuevoProducto.precio_compra_peso = precio_compra_peso
+       nuevoProducto.valor_dolar_compra = valor_dolar_compra
+       nuevoProducto.proveedor = proveedor
+       nuevoProducto.fecha_compra = fecha_compra
+       nuevoProducto.disponibles = disponibles + cantidad
+       nuevoProducto.rentabilidad = rentabilidad
+       nuevoProducto.notas = notas
+       nuevoProducto.faltante = faltante
+       nuevoProducto.limiteFaltante = limiteFaltante
+       nuevoProducto.añadirFaltante = añadirFaltante
+       nuevoProducto.creado = creado
+       nuevoProducto.creador = creador
        nuevoProducto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
 
        if(!nuevoProducto.precio_venta) {    //para que al mostrar la lista, pueda ordenar los productos segun precio.
