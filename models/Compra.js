@@ -34,7 +34,6 @@ const CompraSchema = mongoose.Schema({
   },
   valor_dolar_compra: {
     type: Array,
-
   },
   proveedor: {
     type: Array,

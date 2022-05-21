@@ -14,13 +14,23 @@ exports.crearCompra = async (req, res) => {
                 nombre, marca, modelo, codigo, barras, precio_compra_dolar, valor_dolar_compra
             }
             const compra = new Compra(laCompra)
-            compra.cantidad = [parseInt(req.body.cantidad)]   //a la cantidad le agrego un array que comienza con lo que me llega del body
-            compra.valor_dolar_compra = [parseInt(valor_dolar_compra)]
-            compra.precio_compra_dolar = [parseInt(precio_compra_dolar)]
+            compra.cantidad = parseInt(req.body.cantidad)   //a la cantidad le agrego un array que comienza con lo que me llega del body
+            compra.cantidad.reverse()
+            compra.valor_dolar_compra = parseInt(valor_dolar_compra)
+            compra.valor_dolar_compra.reverse()
+            compra.precio_compra_dolar.reverse()
+            if(precio_compra_dolar) {
+                compra.precio_compra_dolar = parseInt(precio_compra_dolar)
+            } else {
+                compra.precio_compra_dolar = ""
+            }
             compra.proveedor = [proveedor]
-            compra.fecha_compra = [fecha_compra]
+            compra.proveedor.reverse()
+            compra.fecha_compra = fecha_compra
+            compra.fecha_compra.reverse()
             compra.idProducto = id  //le doy clave foranea del producto
             compra.creador = req.usuario.id
+            compra.creado = Date.now()
             await compra.save()
             res.json({compra})
         } else {    //si ya existe un historial de compra del producto
@@ -29,15 +39,16 @@ exports.crearCompra = async (req, res) => {
             compraPasada.marca = marca
             compraPasada.modelo = modelo
             compraPasada.cantidad.push(req.body.cantidad) //al array de cantidad le agrego la cantidad del body
+            compraPasada.cantidad.reverse()
             compraPasada.valor_dolar_compra.push(valor_dolar_compra)
+            compraPasada.valor_dolar_compra.reverse()
             compraPasada.precio_compra_dolar.push(precio_compra_dolar)
-            if(!proveedor) {
-                compraPasada.proveedor.push("-")
-            } else {
-
-                compraPasada.proveedor.push(proveedor)
-            }
+            compraPasada.precio_compra_dolar.reverse()
             compraPasada.fecha_compra.push(fecha_compra)
+            compraPasada.fecha_compra.reverse()
+            compraPasada.creado = Date.now()
+            compraPasada.proveedor.push(proveedor)
+            compraPasada.proveedor.reverse()
             const compra = new Compra(compraPasada)
             await compra.save()
             res.json({compra})
@@ -49,7 +60,7 @@ exports.crearCompra = async (req, res) => {
 
 exports.traerCompras = async (req, res) => {
     try {
-        const compras = await Compra.find({creador: req.usuario.id})
+        const compras = await Compra.find({creador: req.usuario.id}).sort({creado: "desc"})
         res.json({compras})
     } catch (error) {
         console.log(error)
