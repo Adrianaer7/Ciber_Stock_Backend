@@ -71,7 +71,6 @@ exports.elProducto = async (req, res, next) => {
 exports.editarProducto = async (req, res) => {
    try {
        const {codigo, nombre, marca, modelo} = req.body
-       
        let producto = await Producto.findById(req.params.id)
 
        if(producto.creador.toString() !== req.usuario.id){
@@ -81,7 +80,7 @@ exports.editarProducto = async (req, res) => {
            return res.status(404).json({msg: "El producto no existe"})
        }
 
-       const nuevoProducto = req.body
+       const nuevoProducto = req.body.producto
 
        nuevoProducto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
 
