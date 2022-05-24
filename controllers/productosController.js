@@ -108,16 +108,22 @@ exports.editarProductos = async (req, res) => {
         if(valor_dolar_compra>0 && precio_venta> 0) {
             let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
-            producto.precio_venta_conocidos = res2
-            producto.precio_venta_efectivo = ((producto.precio_venta_conocidos * 105) / 100).toFixed(2)
-            producto.precio_venta_tarjeta = ((producto.precio_venta_conocidos * 109) / 100).toFixed(2)
+            producto.precio_venta_efectivo = res2
+            console.log("efectivo", producto.precio_venta_efectivo)
+            producto.precio_venta_conocidos = ((producto.precio_venta_efectivo * 105) / 100).toFixed(2)
+            console.log("conocidos", producto.precio_venta_conocidos)
+            producto.precio_venta_tarjeta = ((producto.precio_venta_efectivo * 109) / 100).toFixed(2)
+            console.log("tarjeta", producto.precio_venta_tarjeta)
         }
         if(precio_compra_peso>0 && precio_venta>0) {
             let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
-            producto.precio_venta_conocidos = res2
-            producto.precio_venta_efectivo = ((producto.precio_venta_conocidos * 105) / 100).toFixed(2)
-            producto.precio_venta_tarjeta = ((producto.precio_venta_conocidos * 109) / 100).toFixed(2)
+            producto.precio_venta_efectivo = res2
+            console.log("efectivo",producto.precio_venta_efectivo)
+            producto.precio_venta_conocidos = ((producto.precio_venta_efectivo * 105) / 100).toFixed(2)
+            console.log("conocidos",producto.precio_venta_conocidos)
+            producto.precio_venta_tarjeta = ((producto.precio_venta_efectivo * 109) / 100).toFixed(2)
+            console.log("tarjeta",producto.precio_venta_tarjeta)
         }
     })
     res.json({productos})
