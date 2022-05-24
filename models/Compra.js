@@ -26,22 +26,11 @@ const CompraSchema = mongoose.Schema({
     trim: true,
     required: true,
   },
-  cantidad: {
+  historial: {
     type: Array,
   },
-  precio_compra_dolar: {
-    type: Array,
-  },
-  valor_dolar_compra: {
-    type: Array,
-  },
-  proveedor: {
-    type: Array,
-    uppercase: true,
-  },
-  fecha_compra: {
-    type: Array,
-  },
+
+
   descripcion: {
     type: String,
     uppercase: true,

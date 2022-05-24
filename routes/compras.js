@@ -15,6 +15,4 @@ router.get("/",
     traerCompras
 )
 
-
-
 module.exports = router;
