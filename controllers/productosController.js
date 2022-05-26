@@ -8,10 +8,10 @@ exports.crearProducto = async (req, res, next) => {
     if(!errores.isEmpty()) {  
         return res.status(400).json({errores: errores.array()}) 
     }
-
     try {
-        const { codigo, nombre, marca, modelo, barras } = req.body;
+        const { codigo, nombre, marca, modelo, barras, valor_dolar_compra, precio_venta_efectivo, precio_compra_peso, proveedor } = req.body;
         const products = await Producto.find({ creador: req.usuario.id });  //obtengo solo los productos del usuario que esta logeado
+
         let boolean = products.map((producto) =>   //recorro los productos y consulto si existe un producto con el mismo codigo, devuelvo un array con false o true si coincide
           producto.codigo === parseInt(codigo) ? true : false
         )
@@ -22,17 +22,37 @@ exports.crearProducto = async (req, res, next) => {
 
         const producto = new Producto(req.body);
         producto.creador = req.usuario.id;
-        producto.precio_venta_tarjeta = 0
-        producto.precio_venta_efectivo = 0
-        
-        if(!producto.precio_venta) {    //para que al mostrar la lista, pueda ordenar los productos segun precio. Si el precio está como null no lo puedo ordenar.
-            producto.precio_venta_conocidos = 0
+
+        if(proveedor) {
+            producto.todos_proveedores = proveedor
         }
+
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
             producto.faltante = true
         }
+        producto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo + " " + barras).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
 
-        producto.descripcion = codigo + " " + nombre + " " + marca + " " + modelo + " " + barras;
+        if(!precio_venta_efectivo) {
+            producto.precio_venta_efectivo = 0
+            producto.precio_venta_conocidos = 0
+            producto.precio_venta_tarjeta = 0
+        }
+
+        if(valor_dolar_compra>0 && precio_venta_efectivo> 0) {
+            
+            producto.precio_venta_conocidos = ((precio_venta_efectivo * 105) / 100).toFixed(2)
+            console.log("conocidos", producto.precio_venta_conocidos)
+            producto.precio_venta_tarjeta = ((precio_venta_efectivo * 109) / 100).toFixed(2)
+            console.log("tarjeta", producto.precio_venta_tarjeta)
+        }
+        if(precio_compra_peso>0 && precio_venta_efectivo>0) {
+            console.log("efectivo",precio_venta_efectivo)
+            producto.precio_venta_conocidos = ((precio_venta_efectivo * 105) / 100).toFixed(2)
+            console.log("conocidos",producto.precio_venta_conocidos)
+            producto.precio_venta_tarjeta = ((precio_venta_efectivo * 109) / 100).toFixed(2)
+            console.log("tarjeta",producto.precio_venta_tarjeta)
+        }
+        
         await producto.save()
         res.json({producto})
         
@@ -70,7 +90,7 @@ exports.elProducto = async (req, res, next) => {
 
 exports.editarProducto = async (req, res) => {
    try {
-       const {codigo, nombre, marca, modelo} = req.body
+       const {codigo, nombre, marca, modelo, barras, proveedor} = req.body.producto
        let producto = await Producto.findById(req.params.id)
 
        if(producto.creador.toString() !== req.usuario.id){
@@ -79,14 +99,23 @@ exports.editarProducto = async (req, res) => {
        if(!producto) { 
            return res.status(404).json({msg: "El producto no existe"})
        }
-
-       const nuevoProducto = req.body.producto
-
-       nuevoProducto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
-
-       if(!nuevoProducto.precio_venta) {    //para que al mostrar la lista, pueda ordenar los productos segun precio.
-            nuevoProducto.precio_venta_conocidos = 0;
-       }
+        const nuevoProducto = req.body.producto
+        if(proveedor && req.body.desdeForm) {
+            if(nuevoProducto.todos_proveedores.length === 0) {
+                nuevoProducto.todos_proveedores.push(proveedor)
+            } else {
+                let boolean = nuevoProducto.todos_proveedores.map(provider => provider === proveedor ? true : false)
+                const prov = boolean.includes(true)
+                console.log(prov)
+                if(!prov) {
+                    nuevoProducto.todos_proveedores.push(proveedor)
+                    console.log(nuevoProducto.todos_proveedores)
+                }
+            }
+        }
+            
+       
+       nuevoProducto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo + " " + barras).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
        if(nuevoProducto.disponibles <= nuevoProducto.limiteFaltante && nuevoProducto.añadirFaltante) {
             nuevoProducto.faltante = true
         } else {
@@ -104,26 +133,20 @@ exports.editarProductos = async (req, res) => {
     let productos = await Producto.find({creador: req.usuario.id}).select("-__v")
     
     productos.map(producto => {
-        let { precio_venta, valor_dolar_compra, precio_compra_peso} = producto;
-        if(valor_dolar_compra>0 && precio_venta> 0) {
-            let res1 = precio_venta / valor_dolar_compra
+        let { precio_venta_efectivo, valor_dolar_compra, precio_compra_peso} = producto;
+        if(valor_dolar_compra>0 && precio_venta_efectivo> 0) {
+            let res1 = precio_venta_efectivo / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
             producto.precio_venta_efectivo = res2
-            console.log("efectivo", producto.precio_venta_efectivo)
-            producto.precio_venta_conocidos = ((producto.precio_venta_efectivo * 105) / 100).toFixed(2)
-            console.log("conocidos", producto.precio_venta_conocidos)
-            producto.precio_venta_tarjeta = ((producto.precio_venta_efectivo * 109) / 100).toFixed(2)
-            console.log("tarjeta", producto.precio_venta_tarjeta)
+            producto.precio_venta_conocidos = ((res2 * 105) / 100).toFixed(2)
+            producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
         }
-        if(precio_compra_peso>0 && precio_venta>0) {
-            let res1 = precio_venta / valor_dolar_compra
+        if(precio_compra_peso>0 && precio_venta_efectivo>0) {
+            let res1 = precio_venta_efectivo / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
             producto.precio_venta_efectivo = res2
-            console.log("efectivo",producto.precio_venta_efectivo)
-            producto.precio_venta_conocidos = ((producto.precio_venta_efectivo * 105) / 100).toFixed(2)
-            console.log("conocidos",producto.precio_venta_conocidos)
-            producto.precio_venta_tarjeta = ((producto.precio_venta_efectivo * 109) / 100).toFixed(2)
-            console.log("tarjeta",producto.precio_venta_tarjeta)
+            producto.precio_venta_conocidos = ((res2 * 105) / 100).toFixed(2)
+            producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
         }
     })
     res.json({productos})

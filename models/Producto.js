@@ -31,10 +31,6 @@ const ProductoSchema = mongoose.Schema({
     uppercase: true,
     trim: true,
   },
-  precio_venta: {
-    type: Number,
-    trim: true,
-  },
   precio_venta_conocidos: {
     type: Number,
   },
@@ -62,6 +58,9 @@ const ProductoSchema = mongoose.Schema({
     type: String,
     trim: true,
     uppercase: true,
+  },
+  todos_proveedores: {
+    type: Array,
   },
   fecha_compra: {
     type: String,
