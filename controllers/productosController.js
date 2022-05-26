@@ -38,20 +38,7 @@ exports.crearProducto = async (req, res, next) => {
             producto.precio_venta_tarjeta = 0
         }
 
-        if(valor_dolar_compra>0 && precio_venta_efectivo> 0) {
-            
-            producto.precio_venta_conocidos = ((precio_venta_efectivo * 105) / 100).toFixed(2)
-            console.log("conocidos", producto.precio_venta_conocidos)
-            producto.precio_venta_tarjeta = ((precio_venta_efectivo * 109) / 100).toFixed(2)
-            console.log("tarjeta", producto.precio_venta_tarjeta)
-        }
-        if(precio_compra_peso>0 && precio_venta_efectivo>0) {
-            console.log("efectivo",precio_venta_efectivo)
-            producto.precio_venta_conocidos = ((precio_venta_efectivo * 105) / 100).toFixed(2)
-            console.log("conocidos",producto.precio_venta_conocidos)
-            producto.precio_venta_tarjeta = ((precio_venta_efectivo * 109) / 100).toFixed(2)
-            console.log("tarjeta",producto.precio_venta_tarjeta)
-        }
+       
         
         await producto.save()
         res.json({producto})
@@ -106,7 +93,6 @@ exports.editarProducto = async (req, res) => {
             } else {
                 let boolean = nuevoProducto.todos_proveedores.map(provider => provider === proveedor ? true : false)
                 const prov = boolean.includes(true)
-                console.log(prov)
                 if(!prov) {
                     nuevoProducto.todos_proveedores.push(proveedor)
                     console.log(nuevoProducto.todos_proveedores)
