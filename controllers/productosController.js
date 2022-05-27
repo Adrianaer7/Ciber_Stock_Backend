@@ -9,7 +9,7 @@ exports.crearProducto = async (req, res, next) => {
         return res.status(400).json({errores: errores.array()}) 
     }
     try {
-        const { codigo, nombre, marca, modelo, barras, valor_dolar_compra, precio_venta_efectivo, precio_compra_peso, proveedor } = req.body;
+        const { codigo, nombre, marca, modelo, barras, valor_dolar_compra, precio_venta, precio_venta_efectivo, precio_compra_peso, proveedor } = req.body;
         const products = await Producto.find({ creador: req.usuario.id });  //obtengo solo los productos del usuario que esta logeado
 
         let boolean = products.map((producto) =>   //recorro los productos y consulto si existe un producto con el mismo codigo, devuelvo un array con false o true si coincide
@@ -32,11 +32,7 @@ exports.crearProducto = async (req, res, next) => {
         }
         producto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo + " " + barras).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
 
-        if(!precio_venta_efectivo) {
-            producto.precio_venta_efectivo = 0
-            producto.precio_venta_conocidos = 0
-            producto.precio_venta_tarjeta = 0
-        }
+        
 
        
         
@@ -119,19 +115,19 @@ exports.editarProductos = async (req, res) => {
     let productos = await Producto.find({creador: req.usuario.id}).select("-__v")
     
     productos.map(producto => {
-        let { precio_venta_efectivo, valor_dolar_compra, precio_compra_peso} = producto;
-        if(valor_dolar_compra>0 && precio_venta_efectivo> 0) {
-            let res1 = precio_venta_efectivo / valor_dolar_compra
+        let {precio_venta, precio_venta_efectivo, valor_dolar_compra, precio_compra_peso} = producto;
+        if(valor_dolar_compra>0 && precio_venta> 0) {
+            let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
-            producto.precio_venta_efectivo = res2
-            producto.precio_venta_conocidos = ((res2 * 105) / 100).toFixed(2)
+            producto.precio_venta_conocidos = res2
+            producto.precio_venta_efectivo = ((res2 * 105) / 100).toFixed(2)
             producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
         }
-        if(precio_compra_peso>0 && precio_venta_efectivo>0) {
-            let res1 = precio_venta_efectivo / valor_dolar_compra
+        if(precio_compra_peso>0 && precio_venta>0) {
+            let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
-            producto.precio_venta_efectivo = res2
-            producto.precio_venta_conocidos = ((res2 * 105) / 100).toFixed(2)
+            producto.precio_venta_conocidos = res2
+            producto.precio_venta_efectivo = ((res2 * 105) / 100).toFixed(2)
             producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
         }
     })
