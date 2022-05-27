@@ -31,12 +31,15 @@ const ProductoSchema = mongoose.Schema({
     uppercase: true,
     trim: true,
   },
-  precio_venta_conocidos: {
+  precio_venta: {
     type: Number,
   },
   precio_venta_efectivo: {
     type: Number,
   },
+  precio_venta_conocidos: {
+  },
+    type: Number,
   precio_venta_tarjeta: {
     type: Number,
   },
