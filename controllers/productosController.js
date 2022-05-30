@@ -30,7 +30,7 @@ exports.crearProducto = async (req, res, next) => {
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
             producto.faltante = true
         }
-        producto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo + " " + barras).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
+        producto.descripcion = (codigo  + nombre + marca + modelo  + barras).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
 
         
 
@@ -46,7 +46,7 @@ exports.crearProducto = async (req, res, next) => {
 
 exports.todosProductos = async (req, res) => {
     try {
-        const productos = await Producto.find({creador: req.usuario.id}).select("-__v")    //trae todo menos ese campo
+        const productos = await Producto.find({creador: req.usuario.id})   //trae todo menos ese campo
         res.json({productos})
     } catch (error) {
         console.log(error)
@@ -97,7 +97,7 @@ exports.editarProducto = async (req, res) => {
         }
             
        
-       nuevoProducto.descripcion = (codigo + " " + nombre + " " + marca + " " + modelo + " " + barras).trim().replace(/\s\s+/g, ' ')   //el trim elimina los espacios en blanco al principio y al final, y el replace quita 2 o mas espacio entre palabra y palabra
+       nuevoProducto.descripcion = (codigo + nombre + marca + modelo + barras).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
        if(nuevoProducto.disponibles <= nuevoProducto.limiteFaltante && nuevoProducto.añadirFaltante) {
             nuevoProducto.faltante = true
         } else {
@@ -115,7 +115,7 @@ exports.editarProductos = async (req, res) => {
     let productos = await Producto.find({creador: req.usuario.id}).select("-__v")
     
     productos.map(producto => {
-        let {precio_venta, precio_venta_efectivo, valor_dolar_compra, precio_compra_peso} = producto;
+        let {precio_venta, valor_dolar_compra, precio_compra_peso} = producto;
         if(valor_dolar_compra>0 && precio_venta> 0) {
             let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
