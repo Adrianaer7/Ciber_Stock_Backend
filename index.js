@@ -8,6 +8,7 @@ conectarDB();    //ejecuto la funcion que está en db.js
 
 //Crear el servidor
 const app = express();
+
 //Settings CORS
 const whitelist = [process.env.FRONTEND_URL]
 const corsOptions = {
@@ -39,6 +40,7 @@ app.use("/api/proveedores", require("./routes/proveedores"));
 app.use("/api/dolares", require("./routes/dolares"));
 app.use("/api/faltantes", require("./routes/faltantes"));
 app.use("/api/compras", require("./routes/compras"));
+app.use("/api/descargas", require("./routes/descargas"));
 
 //Arrancar la app
 app.listen(PORT, () => { //al puerto y al dominio lo va a asignar Heroku
