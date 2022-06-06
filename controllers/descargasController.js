@@ -1,6 +1,6 @@
 const Producto = require("../models/Producto")
 const Compra = require("../models/Compra")
-require("dotenv").config({path: 'variables.env'})  //dotenv carga variables de entorno que hay en un archivo .env. El path es la ruta del archivo
+require("dotenv").config({path: 'variables.env'}) 
 const pdf = require("html-pdf")
 const fs = require("fs")
 const generarFecha = require("../helpers/generarId")

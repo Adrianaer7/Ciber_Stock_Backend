@@ -1,6 +1,6 @@
 //Todo esto se requiere para conectar con MongoDB
 const mongoose = require("mongoose")
-require("dotenv").config({path: 'variables.env'})   //las variables que va a leer dotenv se van a leer en el archivo variables.env
+require("dotenv").config({path: 'variables.env'})
 
 const conectarDB = async () => {
     try {   

@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const Usuario = require("../models/Usuario")
 module.exports = async (req, res, next) => {
      
-    const authHeader = req.get("Authorization") //en postman voy a la pestaña authorization, selecciono bearer token y pego el token cuando hago un auth
+    const authHeader = req.get("Authorization")
     if(authHeader) {
         const token = authHeader.split(" ")[1]
          //Validar el token

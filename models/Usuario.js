@@ -7,8 +7,8 @@ const usuarioSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        lowercase: true, //convierte los strings a minusculas
-        trim: true  //elimina los espacios
+        lowercase: true, 
+        trim: true 
     },
     nombre: {
         type: String,

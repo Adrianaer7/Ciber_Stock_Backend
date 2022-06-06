@@ -1,6 +1,6 @@
 const Producto = require("../models/Producto")
 const {validationResult} = require("express-validator")
-require("dotenv").config({path: 'variables.env'})  //dotenv carga variables de entorno que hay en un archivo .env. El path es la ruta del archivo
+require("dotenv").config({path: 'variables.env'})
 
 exports.crearProducto = async (req, res, next) => {
     //Revisar si hay errores
@@ -46,7 +46,7 @@ exports.crearProducto = async (req, res, next) => {
 
 exports.todosProductos = async (req, res) => {
     try {
-        const productos = await Producto.find({creador: req.usuario.id})   //trae todo menos ese campo
+        const productos = await Producto.find({creador: req.usuario.id})
         res.json({productos})
     } catch (error) {
         console.log(error)

@@ -1,6 +1,6 @@
 const generarId = require("../helpers/generarId")
 const emailRegistro = require("../helpers/emailValidacion")
-const {validationResult} = require("express-validator") //obtiene el resultado de la validacion que se realiza en la ruta
+const {validationResult} = require("express-validator")
 const jwt = require("jsonwebtoken")
 const Usuario = require("../models/Usuario")
 const emailOlvidePassword = require("../helpers/emailPassword")
@@ -15,17 +15,17 @@ exports.nuevoUsuario = async (req, res) => {
     }
 
     //Verificar si el usuario ya existe
-    const {email} = req.body    //leo todo el req.body pero solo extraigo el email
+    const {email} = req.body 
 
     try {
-        let usuario = await Usuario.findOne({email})    //si el email del nuevo usuario ya está siendo usado en otro usuario, pongo el usuario ya creado en la variable
+        let usuario = await Usuario.findOne({email})
         if(usuario) {
             return res.status(400).json({msg: "El usuario ya está registrado"})
         }
 
         //Crear un nuevo usuario
-        usuario = new Usuario(req.body) //creo un nuevo usuario con postman usando el modelo importado 
-        usuario.token = generarId() //genero un match.random + date.now
+        usuario = new Usuario(req.body)
+        usuario.token = generarId()
         await usuario.save()
         //Enviar el email de confirmacion
         emailRegistro({
@@ -36,7 +36,7 @@ exports.nuevoUsuario = async (req, res) => {
         res.json({msg: "Usuario creado correctamente. Revise su email para activar su cuenta."})
         } catch (error) {
             console.log(error)
-            res.status(400).send("Hubo un error")   //si hubo un error al insertar un registro, muestra el msj. El 400 es porque es un error del usuario
+            res.status(400).send("Hubo un error")
         }
 }
 

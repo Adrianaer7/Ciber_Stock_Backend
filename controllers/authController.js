@@ -1,5 +1,5 @@
 const Usuario = require("../models/Usuario")
-require("dotenv").config.apply({path: "variables.env"})  //dotenv carga variables de entorno que hay en un archivo .env. El path es la ruta del archivo
+require("dotenv").config.apply({path: "variables.env"})
 const {validationResult} = require("express-validator")
 const generarJWT = require("../helpers/generarJWT")
 
@@ -15,14 +15,14 @@ exports.autenticarUsuario  = async (req, res, next) => {
     const {email, password} = req.body
 
     try {
-        const usuario = await Usuario.findOne({email})  //comparo el email del usuario registrado en el email del usuario que quiero autenticarme
+        const usuario = await Usuario.findOne({email})
         if(!usuario) {  //si no hay email coincidente,
             return res.status(404).json({msg: "El usuario no existe"})
         }
-         if (!usuario.confirmado) {
-           //si no hay email coincidente,
-           return res.status(403).json({ msg: "Tu cuenta no ha sido confirmada" });
-         }
+        if(!usuario.confirmado) {
+        //si no hay email coincidente,
+        return res.status(403).json({ msg: "Tu cuenta no ha sido confirmada" });
+        }
 
         //Revisar que el password sea correcto
         if(!await usuario.comprobarPassword(password)) {  //Funcion que se declara en el modelo Usuario. si el password es incorrecto

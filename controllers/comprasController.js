@@ -1,6 +1,6 @@
 const Compra = require("../models/Compra")
 const Producto = require("../models/Producto")
-require("dotenv").config({path: 'variables.env'})  //dotenv carga variables de entorno que hay en un archivo .env. El path es la ruta del archivo
+require("dotenv").config({path: 'variables.env'})
 
 
 exports.crearCompra = async (req, res) => {
