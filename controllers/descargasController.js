@@ -3,7 +3,7 @@ const Compra = require("../models/Compra")
 require("dotenv").config({path: 'variables.env'}) 
 const pdf = require("html-pdf")
 const fs = require("fs")
-const generarFecha = require("../helpers/generarId")
+const generarFecha = require("../helpers/generarFecha")
 
 
 exports.generarPDF = async(req,res, next) => {
