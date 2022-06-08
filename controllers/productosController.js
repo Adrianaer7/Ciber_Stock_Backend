@@ -9,17 +9,8 @@ exports.crearProducto = async (req, res, next) => {
         return res.status(400).json({errores: errores.array()}) 
     }
     try {
-        const { codigo, nombre, marca, modelo, barras, valor_dolar_compra, precio_venta, precio_venta_efectivo, precio_compra_peso, proveedor } = req.body;
-        const products = await Producto.find({ creador: req.usuario.id });  //obtengo solo los productos del usuario que esta logeado
-
-        let boolean = products.map((producto) =>   //recorro los productos y consulto si existe un producto con el mismo codigo, devuelvo un array con false o true si coincide
-          producto.codigo === parseInt(codigo) ? true : false
-        )
-        const code = boolean.includes(true)    //consulta si hay algun true en el array
-        if(code) {  //si hay coincidencias, devuelvo msj, sino, creo el producto
-            return res.status(400).json({msg: "Ya existe este codigo"})
-        } 
-
+        const { codigo, nombre, marca, modelo, barras, proveedor } = req.body;
+        
         const producto = new Producto(req.body);
         producto.creador = req.usuario.id;
 
@@ -30,11 +21,7 @@ exports.crearProducto = async (req, res, next) => {
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
             producto.faltante = true
         }
-        producto.descripcion = (codigo  + nombre + marca + modelo  + barras).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-
-        
-
-       
+        producto.descripcion = (codigo  + nombre + marca + modelo  + barras).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios     
         
         await producto.save()
         res.json({producto})

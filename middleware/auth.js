@@ -9,6 +9,9 @@ module.exports = async (req, res, next) => {
         try {
             const cifrado = jwt.verify(token, process.env.SECRETA)    //nos permite verificar el token. En cifrado se va a almacenar la id del usuario que creó el proyecto, el momento en el que se creó el usuario y su fecha de expiracion
             req.usuario = await Usuario.findById(cifrado.id).select("nombre email id")  //solo me traigo estos datos
+            if(req.usuario === null) {
+                return res.status(401).json({msg: "Token no válido"})
+            }
             return next()  //para que se valla al siguiente middleware
         } catch (error) {
             console.log(error)

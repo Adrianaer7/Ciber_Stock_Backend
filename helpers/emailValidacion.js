@@ -1,8 +1,10 @@
+const os = require('os'); //agrego estas 2 lineas para que sea compatible con el node de windows 7
+os.hostname = () => 'localhost';
+
 const nodemailer = require("nodemailer")
 
 module.exports = emailRegistro = async (datos) => {
   const {nombre, email, token}  = datos
-
   const transport = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
@@ -12,7 +14,6 @@ module.exports = emailRegistro = async (datos) => {
     pass: process.env.EMAIL_PASS
   }
   });
-  
   //Informacion del email
   await transport.sendMail({
     from: '"Stock - Ciber infotel" <adrianaerrc7@gmail.com>',
@@ -32,5 +33,4 @@ module.exports = emailRegistro = async (datos) => {
       </style>
     `
   })
-
 }

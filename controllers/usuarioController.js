@@ -1,7 +1,6 @@
 const generarId = require("../helpers/generarId")
 const emailRegistro = require("../helpers/emailValidacion")
-const {validationResult} = require("express-validator")
-const jwt = require("jsonwebtoken")
+const {validationResult} = require("express-validator") //obtiene el resultado de la validacion que se realiza en la ruta
 const Usuario = require("../models/Usuario")
 const emailOlvidePassword = require("../helpers/emailPassword")
 
