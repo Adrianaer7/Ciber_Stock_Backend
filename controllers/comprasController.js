@@ -5,7 +5,7 @@ require("dotenv").config({path: 'variables.env'})
 
 exports.crearCompra = async (req, res) => {
     try {
-        const {nombre, marca, modelo, codigo, precio_compra_dolar, valor_dolar_compra, proveedor, fecha_compra} = req.body.producto
+        const {nombre, marca, modelo, codigo, precio_compra_dolar, valor_dolar_compra, proveedor, garantia, factura, fecha_compra} = req.body.producto
         const productos = await Producto.find({codigo}) //busco un producto que coincida con el codigo que recibo al añadir stock
         const id = productos[0]._id //guardo su id
         const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto de la lista de productos
@@ -16,7 +16,7 @@ exports.crearCompra = async (req, res) => {
                 marca, 
                 modelo, 
                 codigo,
-                historial: {cantidad: req.body.cantidad, fecha_compra, precio_compra_dolar, valor_dolar_compra, proveedor},
+                historial: {cantidad: req.body.cantidad, fecha_compra, precio_compra_dolar, valor_dolar_compra, proveedor, factura, garantia},
                 idProducto: id,
                 creador: req.usuario.id,
                 creado: Date.now()
@@ -27,7 +27,7 @@ exports.crearCompra = async (req, res) => {
         } 
         if (producto.length > 0 && req.body.cantidad ) {    //si existe el producto en el listado de compras y la cantidad es mayora a 0, edito el producto entero
             const compraPasada = producto[0] //guardo el primer y unico objeto coincidente
-            const objeto = {cantidad: req.body.cantidad, fecha_compra, precio_compra_dolar, valor_dolar_compra, proveedor}
+            const objeto = {cantidad: req.body.cantidad, fecha_compra, precio_compra_dolar, valor_dolar_compra, proveedor, factura, garantia}
             compraPasada.nombre = nombre
             compraPasada.marca = marca
             compraPasada.modelo = modelo

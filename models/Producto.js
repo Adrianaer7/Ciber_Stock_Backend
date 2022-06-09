@@ -65,6 +65,13 @@ const ProductoSchema = mongoose.Schema({
   todos_proveedores: {
     type: Array,
   },
+  factura: {
+    type: String,
+    trim: true
+  },
+  garantia: {
+    type: String,
+  },
   fecha_compra: {
     type: String,
   },

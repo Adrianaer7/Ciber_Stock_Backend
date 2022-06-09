@@ -29,8 +29,6 @@ const CompraSchema = mongoose.Schema({
   historial: {
     type: Array,
   },
-
-
   descripcion: {
     type: String,
     uppercase: true,
