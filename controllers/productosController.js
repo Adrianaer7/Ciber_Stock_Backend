@@ -109,6 +109,8 @@ exports.editarProductos = async (req, res) => {
             producto.precio_venta_conocidos = res2
             producto.precio_venta_efectivo = ((res2 * 105) / 100).toFixed(2)
             producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
+            producto.precio_venta_ahoraDoce = (((res2 * 109) / 100) * 1.25 ).toFixed(2)
+            producto.precio_venta_cuotas = ((((res2 * 109) / 100) * 1.25 ) / 12).toFixed(2)
         }
         if(precio_compra_peso>0 && precio_venta>0) {
             let res1 = precio_venta / valor_dolar_compra
@@ -116,6 +118,8 @@ exports.editarProductos = async (req, res) => {
             producto.precio_venta_conocidos = res2
             producto.precio_venta_efectivo = ((res2 * 105) / 100).toFixed(2)
             producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
+            producto.precio_venta_ahoraDoce = (((res2 * 109) / 100) * 1.25 ).toFixed(2)
+            producto.precio_venta_cuotas = ((((res2 * 109) / 100) * 1.25 ) / 12).toFixed(2)
         }
     })
     res.json({productos})

@@ -43,6 +43,12 @@ const ProductoSchema = mongoose.Schema({
   precio_venta_tarjeta: {
     type: Number,
   },
+  precio_venta_ahoraDoce: {
+    type: Number
+  },
+  precio_venta_cuotas: {
+    type: Number
+  },
   precio_compra_dolar: {
     type: Number,
   },
