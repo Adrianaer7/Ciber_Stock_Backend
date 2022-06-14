@@ -34,6 +34,17 @@ exports.crearProducto = async (req, res, next) => {
 exports.todosProductos = async (req, res) => {
     try {
         const productos = await Producto.find({creador: req.usuario.id})
+        const codigos = productos.map(producto => producto.codigo)
+        let cors = []
+        const funcion = function name() {
+            for (let i = 1; i < 120; i++) {
+                cors.push(i)
+            }
+        }
+        funcion()
+        const array = cors.map(numeros => numeros !== codigos && numeros)
+        
+        console.log(array)
         res.json({productos})
     } catch (error) {
         console.log(error)
