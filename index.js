@@ -41,6 +41,8 @@ app.use("/api/dolares", require("./routes/dolares"));
 app.use("/api/faltantes", require("./routes/faltantes"));
 app.use("/api/compras", require("./routes/compras"));
 app.use("/api/descargas", require("./routes/descargas"));
+app.use("/api/codigos", require("./routes/codigos"));
+
 
 //Arrancar la app
 app.listen(PORT, () => {
