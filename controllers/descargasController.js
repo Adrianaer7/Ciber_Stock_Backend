@@ -31,7 +31,6 @@ exports.generarPDF = async(req,res, next) => {
          <li><span>Fecha de las compras: </span>${compras.map(compra => compra.codigo === producto.codigo ? compra.historial.map(historia => historia.fecha_compra !== false && generarFecha(historia.fecha_compra) ): null)}</li>
          <li><span>Fecha de la ultima compra: </span>${generarFecha(producto.fecha_compra)}</li>
          <li><span>Disponibles: </span>${producto.disponibles > 0 ? producto.disponibles : 0}</li>
-         <li><span>Rentabilidad: </span>${producto.rentabilidad > 0 ? producto.rentabilidad : 0}%</li>
          <li><span>Notas: </span>${producto.notas}</li>
         `)
 

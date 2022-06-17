@@ -84,9 +84,6 @@ const ProductoSchema = mongoose.Schema({
   disponibles: {
     type: Number,
   },
-  rentabilidad: {
-    type: Number,
-  },
   notas: {
     type: String,
   },
