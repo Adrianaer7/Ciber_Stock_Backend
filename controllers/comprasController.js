@@ -5,7 +5,7 @@ require("dotenv").config({path: 'variables.env'})
 
 exports.crearCompra = async (req, res) => {
     try {
-        const {nombre, marca, modelo, codigo, precio_compra_dolar, valor_dolar_compra, proveedor, garantia, factura, barras, fecha_compra} = req.body.producto
+        const {nombre, marca, modelo, codigo, precio_compra_dolar, valor_dolar_compra, proveedor, garantia, factura, barras, fecha_compra, notas} = req.body.producto
         const productos = await Producto.find({codigo}) //busco un producto que coincida con el codigo que recibo al añadir stock
         const id = productos[0]._id //guardo su id
         const producto = await Compra.find({idProducto: id})    //busco en todas las compras si hay alguna compra que coincida con el id del producto de la lista de productos
@@ -18,6 +18,7 @@ exports.crearCompra = async (req, res) => {
                 codigo,
                 historial: {cantidad: req.body.cantidad, fecha_compra, precio_compra_dolar, valor_dolar_compra, proveedor, barras, factura, garantia},
                 idProducto: id,
+                descripcion: (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, ''),
                 creador: req.usuario.id,
                 creado: Date.now()
             }
@@ -32,6 +33,7 @@ exports.crearCompra = async (req, res) => {
             compraPasada.marca = marca
             compraPasada.modelo = modelo
             compraPasada.historial = [...compraPasada.historial, objeto ]
+            descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
             compraPasada.creado = Date.now()
             const compra = new Compra(compraPasada)
             await compra.save()
@@ -43,6 +45,7 @@ exports.crearCompra = async (req, res) => {
                 compraPasada.nombre = nombre
                 compraPasada.marca = marca
                 compraPasada.modelo = modelo
+                descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
                 const compra = new Compra(compraPasada)
                 await compra.save()
             }

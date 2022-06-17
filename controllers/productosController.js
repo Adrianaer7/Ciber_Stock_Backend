@@ -9,7 +9,7 @@ exports.crearProducto = async (req, res, next) => {
         return res.status(400).json({errores: errores.array()}) 
     }
     try {
-        const { codigo, nombre, marca, modelo, barras, proveedor } = req.body;
+        const { codigo, nombre, marca, modelo, barras, proveedor, notas } = req.body;
         
         const producto = new Producto(req.body);
         producto.creador = req.usuario.id;
@@ -21,7 +21,7 @@ exports.crearProducto = async (req, res, next) => {
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
             producto.faltante = true
         }
-        producto.descripcion = (codigo  + nombre + marca + modelo  + barras).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios     
+        producto.descripcion = (codigo  + nombre + marca + modelo  + barras + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios     
         
         await producto.save()
         res.json({producto})
@@ -60,7 +60,7 @@ exports.elProducto = async (req, res, next) => {
 
 exports.editarProducto = async (req, res) => {
    try {
-       const {codigo, nombre, marca, modelo, barras, proveedor} = req.body.producto
+       const {codigo, nombre, marca, modelo, barras, proveedor, notas} = req.body.producto
        let producto = await Producto.findById(req.params.id)
 
        if(producto.creador.toString() !== req.usuario.id){
@@ -84,7 +84,7 @@ exports.editarProducto = async (req, res) => {
         }
             
        
-       nuevoProducto.descripcion = (codigo + nombre + marca + modelo + barras).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
+       nuevoProducto.descripcion = (codigo + nombre + marca + modelo + barras + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
        if(nuevoProducto.disponibles <= nuevoProducto.limiteFaltante && nuevoProducto.añadirFaltante) {
             nuevoProducto.faltante = true
         } else {
