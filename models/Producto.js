@@ -58,7 +58,6 @@ const ProductoSchema = mongoose.Schema({
   valor_dolar_compra: {
     type: Number,
     trim: true,
-    required: true,
   },
   valor_dolar_hoy: {
     type: Number,

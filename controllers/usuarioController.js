@@ -2,6 +2,11 @@ const generarId = require("../helpers/generarId")
 const emailRegistro = require("../helpers/emailValidacion")
 const {validationResult} = require("express-validator") //obtiene el resultado de la validacion que se realiza en la ruta
 const Usuario = require("../models/Usuario")
+const Compra = require("../models/Compra")
+const Garantia = require("../models/Garantia")
+const Producto = require("../models/Producto")
+const Proveedor = require("../models/Proveedor")
+const Rubro = require("../models/Rubro")
 const emailOlvidePassword = require("../helpers/emailPassword")
 
 exports.nuevoUsuario = async (req, res) => {
@@ -117,10 +122,21 @@ exports.traerTodos = async (req, res) => {
 }
 
 exports.eliminarTodos = async (req,res) => {
-    const usuarios = await Usuario.find({})
+    const usuarios = await Usuario.find({_id: req.usuario.id})
+    const compras = await Compra.find({creador: req.usuario.id})
+    const garantias = await Garantia.find({creador: req.usuario.id})
+    const productos = await Producto.find({creador: req.usuario.id})
+    const proveedores = await Proveedor.find({creador: req.usuario.id})
+    const rubros = await Rubro.find({creador: req.usuario.id})
+
     if(!usuarios) {
         return res.json({msg: "No existen usuarios"})
     }
+    await Compra.deleteMany({compras})
+    await Garantia.deleteMany({garantias})
+    await Producto.deleteMany({productos})
+    await Proveedor.deleteMany({proveedores})
+    await Rubro.deleteMany({rubros})
     await Usuario.deleteMany({usuarios})
     res.json({msg: "Todos los usuarios se eliminaron"})
 }
