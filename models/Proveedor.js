@@ -8,6 +8,18 @@ const proveedorSchema = new Schema({
     uppercase: true,
     trim: true,
   },
+  empresa: {
+    type: String,
+    trim: true,
+  },
+  telPersonal: {
+    type: String,
+    trim: true
+  },
+  telEmpresa: {
+    type: String,
+    trim: true
+  },
   creador: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Usuario",
