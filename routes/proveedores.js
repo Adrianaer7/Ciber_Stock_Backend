@@ -17,5 +17,9 @@ router.delete("/",
     auth,
     proveedoresController.eliminarTodos
 )
+router.delete("/:id",
+    auth,
+    proveedoresController.eliminarProveedor
+)
 
 module.exports = router;

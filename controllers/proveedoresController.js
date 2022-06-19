@@ -33,6 +33,22 @@ exports.todosProveedores = async (req, res) => {
   }
 };
 
+exports.eliminarProveedor = async (req,res) => {
+  try {
+    const proveedor = await Proveedor.findById(req.params.id)
+    if(proveedor.creador.toString() !== req.usuario.id) {
+      return res.json({msg: "Acción no válida"})
+    }
+    if(!proveedor) {
+      return res.json({msg: "No se encontró el proveedor a eliminar"})
+    }
+    await Proveedor.findOneAndRemove({_id: req.params.id})
+    res.json({msg: "Proveedor eliminado"})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 exports.eliminarTodos = async (req, res) => {
   try {
     let proveedores = await Proveedor.find({creador: req.usuario.id})
