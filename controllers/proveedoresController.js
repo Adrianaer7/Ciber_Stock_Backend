@@ -3,17 +3,7 @@ require("dotenv").config({ path: "variables.env" });
 
 exports.agregarProveedor = async (req, res, next) => {
   try {
-    const { nombre } = req.body;
-
-    let providers = await Proveedor.find({creador: req.usuario.id });
-    let boolean = providers.map(proveedor =>   //recorro los productos y consulto si existe un producto con el mismo codigo, devuelvo un array con false o true si coincide
-        proveedor.nombre === nombre ? true : false
-    )
-    const name = boolean.includes(true)    //consulta si hay algun true en el array
-
-    if(name) {  //si hay coincidencias, devuelvo msj, sino, creo el producto
-      return res.status(400).json({msg: "Ya existe este codigo"})
-    }
+   
 
     const proveedor = new Proveedor(req.body);
     proveedor.creador = req.usuario.id;

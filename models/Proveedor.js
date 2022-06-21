@@ -10,14 +10,17 @@ const proveedorSchema = new Schema({
   },
   empresa: {
     type: String,
+    uppercase: true,
     trim: true,
   },
   telPersonal: {
     type: String,
+    uppercase: true,
     trim: true
   },
   telEmpresa: {
     type: String,
+    uppercase: true,
     trim: true
   },
   creador: {
