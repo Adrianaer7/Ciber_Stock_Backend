@@ -23,6 +23,38 @@ exports.todosProveedores = async (req, res) => {
   }
 };
 
+exports.elProveedor = async (req,res) => {
+  try {
+    const proveedor = await Proveedor.findById(req.params.id)
+    if(!proveedor) {
+      return res.json({msg: "El proveedor no existe"})
+    }
+    res.json({proveedor})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+exports.editarProveedor = async(req,res) => {
+  try {
+    let proveedor = await Proveedor.findById(req.params.id)
+    
+    if(proveedor.creador.toString() !== req.usuario.id) {
+      return res.status(401).json({msg: "Acción no permitida"})
+    }
+
+    if(!proveedor) {
+      return res.status(404).json({msg: "El proveedor no existe"})
+    }
+
+    const nuevoProveedor = req.body
+    proveedor = await Proveedor.findByIdAndUpdate({_id: req.params.id}, nuevoProveedor, {new: true})
+    res.json({proveedor})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 exports.eliminarProveedor = async (req,res) => {
   try {
     const proveedor = await Proveedor.findById(req.params.id)

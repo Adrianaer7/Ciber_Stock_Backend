@@ -13,6 +13,16 @@ router.get("/",
     proveedoresController.todosProveedores
 );
 
+router.get("/:id",
+    auth,
+    proveedoresController.elProveedor
+)
+
+router.put("/:id",
+    auth,
+    proveedoresController.editarProveedor
+)
+
 router.delete("/",
     auth,
     proveedoresController.eliminarTodos
