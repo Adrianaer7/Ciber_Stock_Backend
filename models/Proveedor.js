@@ -23,6 +23,11 @@ const proveedorSchema = new Schema({
     uppercase: true,
     trim: true
   },
+  datos: {
+    type: String,
+    uppercase: true,
+    trim: true
+  },
   creador: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Usuario",
