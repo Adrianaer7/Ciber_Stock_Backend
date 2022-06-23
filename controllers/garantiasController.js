@@ -42,6 +42,10 @@ exports.crearGarantia = async(req,res) => {
 }
 
 exports.traerGarantias = async(req,res) => {
-    const garantias = await Garantia.find({creador: req.usuario.id})
-    res.json({garantias})
+    try {
+        const garantias = await Garantia.find({creador: req.usuario.id})
+        res.json({garantias})
+    } catch (error) {
+        console.log(error)
+    }
 }
