@@ -78,7 +78,6 @@ exports.editarProducto = async (req, res) => {
                 const prov = boolean.includes(true)
                 if(!prov) {
                     nuevoProducto.todos_proveedores.push(proveedor)
-                    console.log(nuevoProducto.todos_proveedores)
                 }
             }
         }
