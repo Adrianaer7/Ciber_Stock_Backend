@@ -42,6 +42,7 @@ exports.todosProductos = async (req, res) => {
 
 exports.elProducto = async (req, res, next) => {
     const url = req.params.id
+    
     try {
         if (!url.match(/^[0-9a-fA-F]{24}$/)) {
             res.json({redireccionar: true}) //creo una variable y le asigno true si la url que me llega no es correcta
@@ -52,10 +53,9 @@ exports.elProducto = async (req, res, next) => {
         }
         
         res.json({producto})
-        
     } catch (error) {
-        console.log(error)
-    }   
+        next()
+    }
 }
 
 exports.editarProducto = async (req, res) => {
