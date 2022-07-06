@@ -13,4 +13,9 @@ router.get("/",
   dolaresController.enviarDolar
 )
 
+router.put("/",
+  auth,
+  dolaresController.editarManualmente
+)
+
 module.exports = router;

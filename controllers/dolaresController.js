@@ -16,6 +16,26 @@ exports.traerDolar = async (req, res, next) => {
   
 };
 
+exports.editarManualmente = async(req, res, next) => {
+  if(req.body.dolarManual) {
+    const {dolarManual, automatico} = req.body
+    let dolar = await Dolares.findOne({})
+    const nuevoDolar = dolarManual
+    dolarManual.automatico = automatico
+    dolar  = await Dolares.findByIdAndUpdate({_id: dolar._id}, nuevoDolar, {new: true})
+    dolar.save()
+    res.json({dolar})
+  } else {
+    const {automatico} = req.body
+    let dolar = await Dolares.findOne({})
+    const nuevoDolar = dolar
+    nuevoDolar.automatico = automatico
+    dolar  = await Dolares.findByIdAndUpdate({_id: nuevoDolar._id}, nuevoDolar, {new: true})
+    dolar.save()
+    res.json({dolar})
+  }
+}
+
 exports.enviarDolar = async (req, res, next) => {
   const dolar = await Dolares.find({}).select("-__v -_id")
   if(!dolar) return
