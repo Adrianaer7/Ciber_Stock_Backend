@@ -71,13 +71,12 @@ exports.editarProducto = async (req, res) => {
        }
         const nuevoProducto = req.body.producto
         if(proveedor && req.body.desdeForm) {
-            if(nuevoProducto.todos_proveedores.length === 0) {
-                nuevoProducto.todos_proveedores.push(proveedor)
+            if(!nuevoProducto.todos_proveedores.length) {   //si no hay ningun proveedor
+                nuevoProducto.todos_proveedores = [...nuevoProducto.todos_proveedores, proveedor]
             } else {
-                let boolean = nuevoProducto.todos_proveedores.map(provider => provider === proveedor ? true : false)
-                const prov = boolean.includes(true)
-                if(!prov) {
-                    nuevoProducto.todos_proveedores.push(proveedor)
+                let proveedorIgual = nuevoProducto.todos_proveedores.find(provider => provider === proveedor)
+                if(!proveedorIgual) {  //si existen proveedores, pero ninguno igual
+                    nuevoProducto.todos_proveedores = [...nuevoProducto.todos_proveedores, proveedor]
                 }
             }
         }
