@@ -65,7 +65,6 @@ const ProductoSchema = mongoose.Schema({
   proveedor: {
     type: String,
     trim: true,
-    uppercase: true,
   },
   todos_proveedores: {
     type: Array,
