@@ -132,7 +132,16 @@ exports.eliminarUsuario = async (req,res) => {
             return res.json({msg: "Este usuario no existe"})
         }
         //elimino el contenido de todas las collecciones
-        await Promise.all([ Usuario.deleteMany({_id: req.usuario.id}), Compra.deleteMany({creador: req.usuario.id}),  Garantia.deleteMany({creador: req.usuario.id}),  Producto.deleteMany({creador: req.usuario.id}),  Proveedor.deleteMany({creador: req.usuario.id}),  Rubro.deleteMany({creador: req.usuario.id}), Dolar.deleteMany({creador: req.usuario.id})])
+        await Promise.all([ 
+            Usuario.deleteOne({_id: req.usuario.id}), 
+            Compra.deleteMany({creador: req.usuario.id}),  
+            Garantia.deleteMany({creador: req.usuario.id}),  
+            Producto.deleteMany({creador: req.usuario.id}),  
+            Proveedor.deleteMany({creador: req.usuario.id}),  
+            Rubro.deleteMany({creador: req.usuario.id}), 
+            Dolar.deleteOne({creador: req.usuario.id})
+        ])
+
         res.json({msg: "El usuario ha sido eliminado"})        
     } catch (error) {
         console.log(error)
