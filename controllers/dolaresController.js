@@ -3,27 +3,30 @@ const Dolares = require("../models/Dolar");
 exports.traerDolar = async (req, res, next) => {
   try {
     const { precio} = req.body
-    const valor = await Dolares.findOne({precio})
-    if(valor) {
-      return res.json(valor)
+    const elDolar = await Dolares.findOne({creador: req.usuario.id}) //encuentro el dolar creado por el usuario registrado
+    
+    if(elDolar) {
+      if(elDolar.precio === precio) {  //si el usuario creó un dolar y es igual al que me traigo del body, le retorno el que ya tengo
+        return res.json(elDolar)
+      } else {
+        await Dolares.deleteMany({creador: req.usuario.id});  //si el creador ya creo un dolar, pero el precio del body es diferente, elimino el objeto de dolar y creo uno nuevo
+      }
     }
-    await Dolares.deleteMany({});
   
     let dolar = new Dolares(req.body);
+    dolar.creador = req.usuario.id
     await dolar.save();
     res.json({ dolar });
   } catch (error) {
     console.log(error)
   }
-  
-  
 };
 
 exports.editarManualmente = async(req, res, next) => {
   try {
     if(req.body.dolarManual) {
       const {dolarManual, automatico} = req.body
-      let dolar = await Dolares.findOne({})
+      let dolar = await Dolares.findOne({creador: req.usuario.id})
       const nuevoDolar = dolarManual
       dolarManual.automatico = automatico
       dolar  = await Dolares.findByIdAndUpdate({_id: dolar._id}, nuevoDolar, {new: true})
@@ -31,7 +34,7 @@ exports.editarManualmente = async(req, res, next) => {
       res.json({dolar})
     } else {
       const {automatico} = req.body
-      let dolar = await Dolares.findOne({})
+      let dolar = await Dolares.findOne({creador: req.usuario.id})
       const nuevoDolar = dolar
       nuevoDolar.automatico = automatico
       dolar  = await Dolares.findByIdAndUpdate({_id: nuevoDolar._id}, nuevoDolar, {new: true})
@@ -45,11 +48,8 @@ exports.editarManualmente = async(req, res, next) => {
 
 exports.enviarDolar = async (req, res, next) => {
   try {
-    const dolar = await Dolares.find({}).select("-__v -_id")
-    if(!dolar) return
-    if(dolar) {
-      res.json({ dolar });
-    }
+    const dolar = await Dolares.find({creador: req.usuario.id}).select("-__v -_id")
+    res.json({dolar})
   } catch (error) {
     console.log(error)
   }

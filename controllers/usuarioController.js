@@ -7,6 +7,8 @@ const Garantia = require("../models/Garantia")
 const Producto = require("../models/Producto")
 const Proveedor = require("../models/Proveedor")
 const Rubro = require("../models/Rubro")
+const Dolar = require("../models/Dolar")
+
 const emailOlvidePassword = require("../helpers/emailPassword")
 
 exports.nuevoUsuario = async (req, res) => {
@@ -121,22 +123,18 @@ exports.traerTodos = async (req, res) => {
     res.json({usuarios})
 }
 
-exports.eliminarTodos = async (req,res) => {
-    const usuarios = await Usuario.find({_id: req.usuario.id})
-    const compras = await Compra.find({creador: req.usuario.id})
-    const garantias = await Garantia.find({creador: req.usuario.id})
-    const productos = await Producto.find({creador: req.usuario.id})
-    const proveedores = await Proveedor.find({creador: req.usuario.id})
-    const rubros = await Rubro.find({creador: req.usuario.id})
+//Elimina el usuario que está logeado
+exports.eliminarUsuario = async (req,res) => {
+    try {
+        const resultado = await Usuario.find({_id: req.usuario.id})
 
-    if(!usuarios) {
-        return res.json({msg: "No existen usuarios"})
+        if(!resultado.length) {
+            return res.json({msg: "Este usuario no existe"})
+        }
+        //elimino el contenido de todas las collecciones
+        await Promise.all([ Usuario.deleteMany({_id: req.usuario.id}), Compra.deleteMany({creador: req.usuario.id}),  Garantia.deleteMany({creador: req.usuario.id}),  Producto.deleteMany({creador: req.usuario.id}),  Proveedor.deleteMany({creador: req.usuario.id}),  Rubro.deleteMany({creador: req.usuario.id}), Dolar.deleteMany({creador: req.usuario.id})])
+        res.json({msg: "El usuario ha sido eliminado"})        
+    } catch (error) {
+        console.log(error)
     }
-    await Compra.deleteMany({compras})
-    await Garantia.deleteMany({garantias})
-    await Producto.deleteMany({productos})
-    await Proveedor.deleteMany({proveedores})
-    await Rubro.deleteMany({rubros})
-    await Usuario.deleteMany({usuarios})
-    res.json({msg: "Todos los usuarios se eliminaron"})
 }

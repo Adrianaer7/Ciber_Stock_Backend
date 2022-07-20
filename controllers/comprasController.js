@@ -47,7 +47,7 @@ exports.crearCompra = async (req, res) => {
                 compraPasada.modelo = modelo
                 descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
                 const compra = new Compra(compraPasada)
-                await compra.save()
+                compra.save()
             }
         }
     } catch (error) {

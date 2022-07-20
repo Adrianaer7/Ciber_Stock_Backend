@@ -11,7 +11,7 @@ const {
     olvidePassword,
     comprobarToken,
     nuevoPassword,
-    eliminarTodos
+    eliminarUsuario
 } = usuarioController
 
 router.post("/",
@@ -38,7 +38,7 @@ router.route("/olvide-password/:token").get(comprobarToken).post(nuevoPassword)
 
 router.delete("/",
     auth,
-    eliminarTodos
+    eliminarUsuario
 )
 
 module.exports = router;

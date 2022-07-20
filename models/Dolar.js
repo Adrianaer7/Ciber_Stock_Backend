@@ -6,6 +6,10 @@ const DolaresSchema = mongoose.Schema({
   },
   automatico: {
     type: Boolean
+  },
+  creador: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Usuario"
   }
 });
 
