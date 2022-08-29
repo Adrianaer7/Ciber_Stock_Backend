@@ -23,6 +23,11 @@ const proveedorSchema = new Schema({
     uppercase: true,
     trim: true
   },
+  email: {
+    type: String,
+    lowercase: true,
+    trim: true
+  },
   datos: {
     type: String,
     uppercase: true,

@@ -36,6 +36,7 @@ app.use("/api/usuarios", require("./routes/usuarios"))
 app.use("/api/auth", require("./routes/auth"))
 app.use("/api/productos", require("./routes/productos"))
 app.use("/api/rubros", require("./routes/rubros"));
+app.use("/api/porcentajes", require("./routes/porcentajes"));
 app.use("/api/proveedores", require("./routes/proveedores"));
 app.use("/api/dolares", require("./routes/dolares"));
 app.use("/api/faltantes", require("./routes/faltantes"));

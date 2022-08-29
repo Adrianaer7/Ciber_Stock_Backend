@@ -1,4 +1,6 @@
 const Producto = require("../models/Producto")
+const Porcentaje = require("../models/Porcentaje")
+
 const {validationResult} = require("express-validator")
 require("dotenv").config({path: 'variables.env'})
 
@@ -98,26 +100,29 @@ exports.editarProducto = async (req, res) => {
 exports.editarProductos = async (req, res) => {
     const {precio} = req.body
     let productos = await Producto.find({creador: req.usuario.id}).select("-__v")
-    
+    let porcentajeEfectivo = await Porcentaje.findOne({tipo: "EFECTIVO"})
+    let porcentajeTarjeta = await Porcentaje.findOne({tipo: "TARJETA"})
+    let porcentajeAhoraDoce = await Porcentaje.findOne({tipo: "AHORADOCE"})
+
     productos.map(producto => {
         let {precio_venta, valor_dolar_compra, precio_compra_peso} = producto;
         if(valor_dolar_compra>0 && precio_venta> 0) {
             let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
             producto.precio_venta_conocidos = res2
-            producto.precio_venta_efectivo = ((res2 * 105) / 100).toFixed(2)
-            producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
-            producto.precio_venta_ahoraDoce = (((res2 * 109) / 100) * 1.25 ).toFixed(2)
-            producto.precio_venta_cuotas = ((((res2 * 109) / 100) * 1.25 ) / 12).toFixed(2)
+            producto.precio_venta_efectivo = ((res2 * (100 + porcentajeEfectivo.comision)) / 100).toFixed(2)
+            producto.precio_venta_tarjeta = ((res2 * (100 + porcentajeTarjeta.comision)) / 100).toFixed(2)
+            producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
+            producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
         }
         if(precio_compra_peso>0 && precio_venta>0) {
             let res1 = precio_venta / valor_dolar_compra
             let res2 = (res1 * precio).toFixed(2)
             producto.precio_venta_conocidos = res2
-            producto.precio_venta_efectivo = ((res2 * 105) / 100).toFixed(2)
-            producto.precio_venta_tarjeta = ((res2 * 109) / 100).toFixed(2)
-            producto.precio_venta_ahoraDoce = (((res2 * 109) / 100) * 1.25 ).toFixed(2)
-            producto.precio_venta_cuotas = ((((res2 * 109) / 100) * 1.25 ) / 12).toFixed(2)
+            producto.precio_venta_efectivo = ((res2 * (100 + porcentajeEfectivo.comision)) / 100).toFixed(2)
+            producto.precio_venta_tarjeta = ((res2 * (100 + porcentajeTarjeta.comision)) / 100).toFixed(2)
+            producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
+            producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
         }
     })
     res.json({productos})

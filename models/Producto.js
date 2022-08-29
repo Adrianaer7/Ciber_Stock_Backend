@@ -32,16 +32,16 @@ const ProductoSchema = mongoose.Schema({
     trim: true,
   },
   precio_venta: {
-    type: Number,
+    type: Number
   },
   precio_venta_conocidos: {
     type: Number
   },
   precio_venta_efectivo: {
-    type: Number,
+    type: Number
   },
   precio_venta_tarjeta: {
-    type: Number,
+    type: Number
   },
   precio_venta_ahoraDoce: {
     type: Number
@@ -50,49 +50,52 @@ const ProductoSchema = mongoose.Schema({
     type: Number
   },
   precio_compra_dolar: {
-    type: Number,
+    type: Number
   },
   precio_compra_peso: {
-    type: Number,
+    type: Number
   },
   valor_dolar_compra: {
     type: Number,
     trim: true,
   },
   valor_dolar_hoy: {
-    type: Number,
+    type: Number
   },
   proveedor: {
     type: String,
     trim: true,
   },
   todos_proveedores: {
-    type: Array,
+    type: Array
   },
   factura: {
     type: String,
     trim: true
   },
   garantia: {
-    type: String,
+    type: String
   },
   fecha_compra: {
-    type: String,
+    type: String
   },
   disponibles: {
-    type: Number,
+    type: Number
   },
   notas: {
-    type: String,
+    type: String
   },
   faltante: {
-    type: Boolean,
+    type: Boolean
   },
   limiteFaltante: {
-    type: Number,
+    type: Number
   },
   añadirFaltante: {
-    type: Boolean,
+    type: Boolean
+  },
+  visibilidad: {
+    type: Boolean
   },
   descripcion: {
     type: String,

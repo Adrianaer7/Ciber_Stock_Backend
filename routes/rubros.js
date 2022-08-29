@@ -10,8 +10,23 @@ router.post("/",
 
 router.get("/",
   auth, 
-  rubrosController.todosRubros
+  rubrosController.todosRubros,
 );
+
+router.get("/:id",
+  auth, 
+  rubrosController.elRubro,
+);
+
+router.put("/:id",
+  auth,
+  rubrosController.editarRubro
+)
+
+router.delete("/:id",
+  auth,
+  rubrosController.eliminarRubro
+)
 
 router.delete("/",
   auth,

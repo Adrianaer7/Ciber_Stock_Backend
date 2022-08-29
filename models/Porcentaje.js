@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 
 
-const rubroSchema = mongoose.Schema({
+const porcentajeSchema = mongoose.Schema({
   nombre: {
     type: String,
     uppercase: true,
     trim: true,
   },
-  rentabilidad: {
+  comision: {
     type: Number
+  },
+  tipo: {
+    type: String
   },
   creador: {
     type: mongoose.Schema.Types.ObjectId, 
@@ -16,4 +19,4 @@ const rubroSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Rubro", rubroSchema);
+module.exports = mongoose.model("Porcentaje", porcentajeSchema);

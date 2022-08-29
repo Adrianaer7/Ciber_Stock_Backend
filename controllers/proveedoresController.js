@@ -3,10 +3,10 @@ require("dotenv").config({ path: "variables.env" });
 
 exports.agregarProveedor = async (req, res, next) => {
   try {
-   const {nombre, empresa, telEmpresa, telPersonal} = req.body
+   const {nombre, empresa, telEmpresa, telPersonal, email} = req.body
 
     const proveedor = new Proveedor(req.body);
-    proveedor.datos = (nombre + empresa + telPersonal + telEmpresa).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
+    proveedor.datos = (nombre + empresa + telPersonal + telEmpresa + email).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
     proveedor.creador = req.usuario.id;
     await proveedor.save();
     res.json({ proveedor });
@@ -37,7 +37,7 @@ exports.elProveedor = async (req,res) => {
 }
 
 exports.editarProveedor = async(req,res) => {
-  const {nombre, empresa, telEmpresa, telPersonal} = req.body
+  const {nombre, empresa, telEmpresa, telPersonal, email} = req.body
 
   try {
     let proveedor = await Proveedor.findById(req.params.id)
@@ -51,7 +51,7 @@ exports.editarProveedor = async(req,res) => {
     }
 
     const nuevoProveedor = req.body
-    nuevoProveedor.datos = (nombre + empresa + telPersonal + telEmpresa).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
+    nuevoProveedor.datos = (nombre + empresa + telPersonal + telEmpresa + email).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
     proveedor = await Proveedor.findByIdAndUpdate({_id: req.params.id}, nuevoProveedor, {new: true})
     res.json({proveedor})
   } catch (error) {
