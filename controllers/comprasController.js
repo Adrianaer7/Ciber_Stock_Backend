@@ -13,7 +13,6 @@ exports.crearCompra = async (req, res) => {
         let arsAdolar
         if(precio_compra_peso > 0) {
             arsAdolar = (precio_compra_peso / valor_dolar_compra ).toFixed(2)
-            console.log(arsAdolar)
         }
 
         if(!producto && req.body.cantidad || producto.length == 0 && req.body.cantidad ) { //si a ese producto nunca se le hizo una compra y traigo una cantidad, agrego el producto entero
