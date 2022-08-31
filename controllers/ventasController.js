@@ -3,10 +3,7 @@ require("dotenv").config({ path: "variables.env" });
 
 exports.agregarVenta = async (req, res) => {
   try {
-   const {nombre,} = req.body
-
     const venta = new Venta(req.body);
-    venta.datos = (nombre).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
     venta.creador = req.usuario.id;
     await venta.save();
     res.json({ venta });
@@ -37,8 +34,7 @@ exports.laVenta = async (req,res) => {
 }
 
 exports.editarVenta = async(req,res) => {
-  const {nombre} = req.body
-
+  const {cantidad} = req.body
   try {
     let venta = await Venta.findById(req.params.id)
     
@@ -50,8 +46,8 @@ exports.editarVenta = async(req,res) => {
       return res.status(404).json({msg: "La venta no existe"})
     }
 
-    const nuevaVenta = req.body
-    nuevaVenta.datos = (nombre).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
+    const nuevaVenta = venta
+    nuevaVenta.unidades = nuevaVenta.unidades - cantidad
     venta = await Venta.findByIdAndUpdate({_id: req.params.id}, nuevaVenta, {new: true})
     res.json({venta})
   } catch (error) {
