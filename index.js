@@ -41,6 +41,7 @@ app.use("/api/proveedores", require("./routes/proveedores"));
 app.use("/api/dolares", require("./routes/dolares"));
 app.use("/api/faltantes", require("./routes/faltantes"));
 app.use("/api/compras", require("./routes/compras"));
+app.use("/api/ventas", require("./routes/ventas"));
 app.use("/api/descargas", require("./routes/descargas"));
 app.use("/api/codigos", require("./routes/codigos"));
 app.use("/api/garantias", require("./routes/garantias"));
