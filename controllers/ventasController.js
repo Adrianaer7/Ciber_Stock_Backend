@@ -16,7 +16,7 @@ exports.agregarVenta = async (req, res) => {
 
 exports.todasVentas = async (req, res) => {
   try {
-    const ventas = await Venta.find({creador: req.usuario.id}).select("-__v");
+    const ventas = await Venta.find({creador: req.usuario.id}).select("-__v").sort({creado: "desc"});
     res.json({ ventas });
   } catch (error) {
     console.log(error);
