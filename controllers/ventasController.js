@@ -1,4 +1,6 @@
 const Venta = require("../models/Venta");
+const Producto = require("../models/Producto");
+
 require("dotenv").config({ path: "variables.env" });
 
 exports.agregarVenta = async (req, res) => {
@@ -34,7 +36,8 @@ exports.laVenta = async (req,res) => {
 }
 
 exports.editarVenta = async(req,res) => {
-  const {cantidad} = req.body
+  const {cantidad, idProducto} = req.body
+  const producto = await Producto.findOne({_id: idProducto})
   try {
     let venta = await Venta.findById(req.params.id)
     
@@ -46,6 +49,12 @@ exports.editarVenta = async(req,res) => {
       return res.status(404).json({msg: "La venta no existe"})
     }
 
+    //Devuelvo la unidad vendida al producto
+    let nuevoProducto = producto
+    nuevoProducto.disponibles = nuevoProducto.disponibles + cantidad
+    await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
+    
+    //Descuento las unidades vendidas de la venta
     const nuevaVenta = venta
     nuevaVenta.unidades = nuevaVenta.unidades - cantidad
     venta = await Venta.findByIdAndUpdate({_id: req.params.id}, nuevaVenta, {new: true})
@@ -53,9 +62,11 @@ exports.editarVenta = async(req,res) => {
   } catch (error) {
     console.log(error)
   }
+  
 }
 
 exports.eliminarVenta = async (req,res) => {
+  
   try {
     const venta = await Venta.findById(req.params.id)
     if(venta.creador.toString() !== req.usuario.id) {
@@ -64,6 +75,15 @@ exports.eliminarVenta = async (req,res) => {
     if(!venta) {
       return res.json({msg: "No se encontró la venta a eliminar"})
     }
+    const {idProducto, unidades} = venta
+
+    //Devuelvo la unidad vendida al producto
+    const producto = await Producto.findOne({_id: idProducto})
+    let nuevoProducto = producto
+    nuevoProducto.disponibles = nuevoProducto.disponibles + unidades
+    await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
+
+    //Elimino la venta realizada
     await Venta.findOneAndRemove({_id: req.params.id})
     res.json({msg: "Venta eliminada"})
   } catch (error) {
