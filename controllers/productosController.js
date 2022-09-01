@@ -35,7 +35,7 @@ exports.crearProducto = async (req, res, next) => {
 
 exports.todosProductos = async (req, res) => {
     try {
-        const productos = await Producto.find({creador: req.usuario.id})
+        const productos = await Producto.find({creador: req.usuario.id}).sort({creado: "desc"})
         res.json({productos})
     } catch (error) {
         console.log(error)
@@ -99,7 +99,7 @@ exports.editarProducto = async (req, res) => {
 
 exports.editarProductos = async (req, res) => {
     const {precio} = req.body
-    let productos = await Producto.find({creador: req.usuario.id}).select("-__v")
+    let productos = await Producto.find({creador: req.usuario.id}).select("-__v").sort({creado: "desc"})
     let porcentajeEfectivo = await Porcentaje.findOne({tipo: "EFECTIVO"})
     let porcentajeTarjeta = await Porcentaje.findOne({tipo: "TARJETA"})
     let porcentajeAhoraDoce = await Porcentaje.findOne({tipo: "AHORADOCE"})
