@@ -41,12 +41,16 @@ exports.editarVenta = async(req,res) => {
   try {
     let venta = await Venta.findById(req.params.id)
     
+    if(!venta) {
+      return res.status(404).json({msg: "La venta no existe"})
+    }
+
     if(venta.creador.toString() !== req.usuario.id) {
       return res.status(401).json({msg: "Acción no permitida"})
     }
-
-    if(!venta) {
-      return res.status(404).json({msg: "La venta no existe"})
+    
+    if(!producto) {
+      return res.json({msg: "No se pueden devolver las unidades porque el producto ya no existe"})
     }
 
     //Devuelvo la unidad vendida al producto
@@ -69,20 +73,25 @@ exports.eliminarVenta = async (req,res) => {
   
   try {
     const venta = await Venta.findById(req.params.id)
-    if(venta.creador.toString() !== req.usuario.id) {
-      return res.json({msg: "Acción no válida"})
-    }
+    
     if(!venta) {
       return res.json({msg: "No se encontró la venta a eliminar"})
+    }
+
+    if(venta.creador.toString() !== req.usuario.id) {
+      return res.json({msg: "Acción no válida"})
     }
     const {idProducto, unidades} = venta
 
     //Devuelvo la unidad vendida al producto
     const producto = await Producto.findOne({_id: idProducto})
+    if(!producto) {
+      return res.json({msg: "No se pueden devolver las unidades porque el producto ya no existe"})
+    }
     let nuevoProducto = producto
     nuevoProducto.disponibles = nuevoProducto.disponibles + unidades
+    
     await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
-
     //Elimino la venta realizada
     await Venta.findOneAndRemove({_id: req.params.id})
     res.json({msg: "Venta eliminada"})

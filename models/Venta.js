@@ -31,6 +31,9 @@ const ventaSchema = mongoose.Schema({
   precioEnDolar: {
     type: Number
   },
+  precioEnArs: {
+    type: Number
+  },
   unidades: {
     type: Number,
   },
@@ -45,6 +48,10 @@ const ventaSchema = mongoose.Schema({
   idProducto: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Producto", 
+  },
+  existeProducto: { //por si el producto se eliminó
+    type: Boolean,
+    default: true
   },
   creador: {
     type: mongoose.Schema.Types.ObjectId, 

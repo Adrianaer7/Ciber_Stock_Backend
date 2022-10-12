@@ -2,6 +2,7 @@ const Producto = require("../models/Producto")
 const Porcentaje = require("../models/Porcentaje")
 
 const {validationResult} = require("express-validator")
+const Venta = require("../models/Venta")
 require("dotenv").config({path: 'variables.env'})
 
 exports.crearProducto = async (req, res, next) => {
@@ -137,6 +138,15 @@ exports.eliminarProducto = async (req, res) => {
         }
         if(!producto) {
             return res.status(404).json({msg: "Producto no encontrado"})
+        }
+
+        const venta = await Venta.findOne({idProducto: req.params.id})
+
+        if(venta) {
+            let ventaEditada = venta
+            //para que al mostrar las ventas, no muestre opcion de eliminar o editar la venta, 
+            ventaEditada.existeProducto = false
+            await Venta.findOneAndUpdate({idProducto: req.params.id}, ventaEditada, {new: true})
         }
 
         await Producto.findOneAndRemove({_id: req.params.id})
