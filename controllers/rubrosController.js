@@ -1,9 +1,16 @@
+const Producto = require("../models/Producto");
 const Rubro = require("../models/Rubro");
 require("dotenv").config({ path: "variables.env" });
 
 exports.agregarRubro = async (req, res, next) => {
   try {
-   const {nombre, rentabilidad} = req.body
+    const {nombre, rentabilidad} = req.body
+
+    const rubroIgual = await Rubro.findOne({nombre})
+    if(rubroIgual) {
+      return res.json({msg: "Este rubro ya existe"})
+    }
+
 
     const rubro = new Rubro(req.body);
     rubro.datos = (nombre + rentabilidad).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
@@ -38,7 +45,7 @@ exports.elRubro = async (req,res) => {
 
 exports.editarRubro = async(req,res) => {
   const {nombre, rentabilidad} = req.body
-
+  
   try {
     let rubro = await Rubro.findById(req.params.id)
     
@@ -49,6 +56,30 @@ exports.editarRubro = async(req,res) => {
     if(!rubro) {
       return res.status(404).json({msg: "El rubro no existe"})
     }
+    
+    let productos = await Producto.find({creador: req.usuario.id})
+    
+    const productoCambiado = async (producto) => {
+      await Producto.findByIdAndUpdate({_id: producto._id}, producto , {new:true} )
+    }
+
+    //modifico los productos
+    productos.map(producto => {
+      const {precio_venta, precio_compra_dolar, precio_compra_peso, valor_dolar_compra} = producto
+
+      //cambio el valor del rubro para que no se quede con el valor viejo
+      producto.rubroValor = rentabilidad
+
+      //actualizo el precio de venta con las nuevas rentabilidades
+      if(precio_compra_dolar && precio_venta > 0) {
+        producto.precio_venta = ((precio_compra_dolar * valor_dolar_compra) * (parseInt(Math.round(parseFloat(rentabilidad)))+100) / 100)
+        productoCambiado(producto)
+      }
+      if(precio_compra_peso && precio_venta > 0) {
+        producto.precio_venta =  (precio_compra_peso * (parseInt(Math.round(parseFloat(rentabilidad)))+100) / 100)
+        productoCambiado(producto)
+      }
+    })
 
     const nuevoRubro = req.body
     nuevoRubro.datos = (nombre + rentabilidad).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios

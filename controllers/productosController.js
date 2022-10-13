@@ -125,6 +125,10 @@ exports.editarProductos = async (req, res) => {
             producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
             producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
         }
+        if(!precio_venta) {
+            producto.precio_venta_ahoraDoce = 0
+            producto.precio_venta_cuotas = 0
+        }
     })
     res.json({productos})
 }

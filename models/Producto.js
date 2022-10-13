@@ -31,6 +31,9 @@ const ProductoSchema = mongoose.Schema({
     uppercase: true,
     trim: true,
   },
+  rubroValor: {
+    type: Number
+  },
   precio_venta: {
     type: Number
   },
