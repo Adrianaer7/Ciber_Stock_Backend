@@ -8,7 +8,7 @@ exports.autenticarUsuario  = async (req, res, next) => {
     //Mostrar mensajes de error
     const errores = validationResult(req)   
     if(!errores.isEmpty()) { 
-        return res.status(400).json({errores: errores.array()}) 
+        return res.status(400).json({msg: errores.array()[0].msg}) 
     }
 
     //Buscar el usuario para ver si está registrado

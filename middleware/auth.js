@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 const Usuario = require("../models/Usuario")
+
 module.exports = async (req, res, next) => {
-     
     const authHeader = req.get("Authorization")
     if(authHeader) {
         const token = authHeader.split(" ")[1]

@@ -38,7 +38,7 @@ exports.crearCompra = async (req, res) => {
             compraPasada.marca = marca
             compraPasada.modelo = modelo
             compraPasada.historial = [...compraPasada.historial, objeto ]
-            descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
+            compraPasada.descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
             compraPasada.creado = Date.now()
             const compra = new Compra(compraPasada)
             await compra.save()
@@ -50,7 +50,7 @@ exports.crearCompra = async (req, res) => {
                 compraPasada.nombre = nombre
                 compraPasada.marca = marca
                 compraPasada.modelo = modelo
-                descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
+                compraPasada.descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
                 const compra = new Compra(compraPasada)
                 compra.save()
             }

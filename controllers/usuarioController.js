@@ -16,10 +16,9 @@ exports.nuevoUsuario = async (req, res) => {
     //Mostrar mensajes de error
     const errores = validationResult(req)   //me devuelve el array con el mensaje de error que definí en la ruta, junto con el campo al que se le atribuye el error, y el body, que es de donde lo traigo
     if(!errores.isEmpty()) {    //si hay errores
-        return res.status(400).json({errores: errores.array()}) //muestro el array de errores
-        
+        return res.status(400).json({msg: errores.array()[0].msg}) //muestro el array de errores
     }
-
+    
     //Verificar si el usuario ya existe
     const {email} = req.body 
 
