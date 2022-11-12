@@ -1,5 +1,4 @@
 const Porcentaje = require("../models/Porcentaje");
-require("dotenv").config({ path: "variables.env" });
 
 exports.agregarPorcentaje = async (req, res, next) => {
   try {

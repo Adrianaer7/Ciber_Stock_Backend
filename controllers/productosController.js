@@ -1,9 +1,7 @@
 const Producto = require("../models/Producto")
 const Porcentaje = require("../models/Porcentaje")
-
-const {validationResult} = require("express-validator")
 const Venta = require("../models/Venta")
-require("dotenv").config({path: 'variables.env'})
+const {validationResult} = require("express-validator")
 
 exports.crearProducto = async (req, res, next) => {
     //Revisar si hay errores

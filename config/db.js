@@ -1,4 +1,3 @@
-//Todo esto se requiere para conectar con MongoDB
 const mongoose = require("mongoose")
 require("dotenv").config({path: 'variables.env'})
 

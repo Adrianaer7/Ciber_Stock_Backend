@@ -1,5 +1,4 @@
 const Producto = require("../models/Producto");
-require("dotenv").config({ path: "variables.env" }); //dotenv carga variables de entorno que hay en un archivo .env. El path es la ruta del archivo
 
 //cuando haga click en el boton añadir faltante, viene a esta funcion
 exports.crearFaltante = async (req, res, next) => {

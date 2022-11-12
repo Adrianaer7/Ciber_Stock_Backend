@@ -1,6 +1,5 @@
 const Compra = require("../models/Compra")
 const Producto = require("../models/Producto")
-require("dotenv").config({path: 'variables.env'})
 
 
 exports.crearCompra = async (req, res) => {

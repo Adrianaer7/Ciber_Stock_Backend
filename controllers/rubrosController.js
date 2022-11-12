@@ -1,6 +1,5 @@
 const Producto = require("../models/Producto");
 const Rubro = require("../models/Rubro");
-require("dotenv").config({ path: "variables.env" });
 
 exports.agregarRubro = async (req, res, next) => {
   try {

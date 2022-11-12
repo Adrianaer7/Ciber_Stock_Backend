@@ -1,5 +1,4 @@
 const Proveedor = require("../models/Proveedor");
-require("dotenv").config({ path: "variables.env" });
 
 exports.agregarProveedor = async (req, res, next) => {
   try {

@@ -1,5 +1,4 @@
 const Usuario = require("../models/Usuario")
-require("dotenv").config.apply({path: "variables.env"})
 const {validationResult} = require("express-validator")
 const generarJWT = require("../helpers/generarJWT")
 

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const ventaSchema = mongoose.Schema({
   codigo: {
     type: Number

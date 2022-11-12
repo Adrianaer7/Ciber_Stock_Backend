@@ -1,6 +1,3 @@
-const generarId = require("../helpers/generarId")
-const emailRegistro = require("../helpers/emailValidacion")
-const {validationResult} = require("express-validator") //obtiene el resultado de la validacion que se realiza en la ruta
 const Usuario = require("../models/Usuario")
 const Compra = require("../models/Compra")
 const Garantia = require("../models/Garantia")
@@ -8,8 +5,11 @@ const Producto = require("../models/Producto")
 const Proveedor = require("../models/Proveedor")
 const Rubro = require("../models/Rubro")
 const Dolar = require("../models/Dolar")
+const {validationResult} = require("express-validator") //obtiene el resultado de la validacion que se realiza en la ruta
+const generarId = require("../helpers/generarId")
+const enviarEmail = require("../helpers/enviarEmail")
 
-const emailOlvidePassword = require("../helpers/emailPassword")
+const {emailRegistro, emailOlvidePassword} = enviarEmail
 
 exports.nuevoUsuario = async (req, res) => {
 
