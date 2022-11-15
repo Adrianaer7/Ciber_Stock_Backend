@@ -2,6 +2,7 @@ const Producto = require("../models/Producto")
 const Porcentaje = require("../models/Porcentaje")
 const Venta = require("../models/Venta")
 const {validationResult} = require("express-validator")
+const { default: mongoose } = require("mongoose")
 
 exports.crearProducto = async (req, res, next) => {
     //Revisar si hay errores
@@ -41,21 +42,23 @@ exports.todosProductos = async (req, res) => {
     }
 }
 
-exports.elProducto = async (req, res, next) => {
-    const url = req.params.id
-    
+exports.elProducto = async (req, res) => {
+    const {id} = req.params
+
+    const urlValida = mongoose.Types.ObjectId.isValid(id)   //comprueba que la url es de tipo objectId
+    if (!urlValida) {
+        return res.json({redireccionar: true}) //creo una variable y le asigno true si la id que me llega no es correcta
+    }
+
     try {
-        if (!url.match(/^[0-9a-fA-F]{24}$/)) {
-            res.json({redireccionar: true}) //creo una variable y le asigno true si la url que me llega no es correcta
-        }
-        const producto = await Producto.findById(url)
+        const producto = await Producto.findById(id)
         if(!producto) {
-            res.json({redireccionar: true})
+            return res.json({redireccionar: true})
         }
         
         res.json({producto})
     } catch (error) {
-        next()
+        console.log(error)
     }
 }
 
