@@ -1,8 +1,8 @@
+const mongoose = require("mongoose")
 const Producto = require("../models/Producto")
 const Porcentaje = require("../models/Porcentaje")
 const Venta = require("../models/Venta")
 const {validationResult} = require("express-validator")
-const { default: mongoose } = require("mongoose")
 
 exports.crearProducto = async (req, res, next) => {
     //Revisar si hay errores
