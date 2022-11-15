@@ -3,34 +3,36 @@ const router = express.Router();
 const rubrosController = require("../controllers/rubrosController");
 const auth = require("../middleware/auth");
 
+const {agregarRubro, todosRubros, elRubro, editarRubro, eliminarRubro, eliminarTodos} = rubrosController
+
 router.post("/",
   auth,
-  rubrosController.agregarRubro
+  agregarRubro
 );
 
 router.get("/",
   auth, 
-  rubrosController.todosRubros,
+  todosRubros,
 );
 
 router.get("/:id",
   auth, 
-  rubrosController.elRubro,
+  elRubro,
 );
 
 router.put("/:id",
   auth,
-  rubrosController.editarRubro
+  editarRubro
 )
 
 router.delete("/:id",
   auth,
-  rubrosController.eliminarRubro
+  eliminarRubro
 )
 
 router.delete("/",
   auth,
-  rubrosController.eliminarTodos
+  eliminarTodos
 )
 
 module.exports = router;

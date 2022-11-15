@@ -1,17 +1,18 @@
 const express = require ("express")
+const router = express.Router()
 const garantiasController = require("../controllers/garantiasController");
 const auth = require("../middleware/auth");
 
-const router = express.Router()
+const {crearGarantia, traerGarantias} = garantiasController
 
 router.post("/",
     auth,
-    garantiasController.crearGarantia
+    crearGarantia
 )
 
 router.get("/",
     auth,
-    garantiasController.traerGarantias
+    traerGarantias
 )
 
 module.exports = router;

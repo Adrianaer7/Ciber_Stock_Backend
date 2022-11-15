@@ -3,33 +3,36 @@ const router = express.Router();
 const proveedoresController = require("../controllers/proveedoresController");
 const auth = require("../middleware/auth");
 
+const {agregarProveedor, todosProveedores, elProveedor, editarProveedor, eliminarProveedor, eliminarTodos} = proveedoresController
+
 router.post("/", 
     auth, 
-    proveedoresController.agregarProveedor
+    agregarProveedor
 );
 
 router.get("/", 
     auth, 
-    proveedoresController.todosProveedores
+    todosProveedores
 );
 
 router.get("/:id",
     auth,
-    proveedoresController.elProveedor
+    elProveedor
 )
 
 router.put("/:id",
     auth,
-    proveedoresController.editarProveedor
+    editarProveedor
+)
+
+router.delete("/:id",
+    auth,
+    eliminarProveedor
 )
 
 router.delete("/",
     auth,
-    proveedoresController.eliminarTodos
-)
-router.delete("/:id",
-    auth,
-    proveedoresController.eliminarProveedor
+    eliminarTodos
 )
 
 module.exports = router;

@@ -3,34 +3,36 @@ const router = express.Router();
 const ventasController = require("../controllers/ventasController");
 const auth = require("../middleware/auth");
 
+const {agregarVenta, todasVentas, laVenta, editarVenta, eliminarTodas, eliminarVenta} = ventasController
+
 router.post("/",
   auth,
-  ventasController.agregarVenta
+  agregarVenta
 );
 
 router.get("/",
   auth, 
-  ventasController.todasVentas,
+  todasVentas,
 );
 
 router.get("/:id",
   auth, 
-  ventasController.laVenta,
+  laVenta,
 );
 
 router.put("/:id",
   auth,
-  ventasController.editarVenta
+  editarVenta
 )
 
 router.delete("/:id",
   auth,
-  ventasController.eliminarVenta
+  eliminarVenta
 )
 
 router.delete("/",
   auth,
-  ventasController.eliminarTodas
+  eliminarTodas
 )
 
 module.exports = router;

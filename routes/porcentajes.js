@@ -3,34 +3,36 @@ const router = express.Router();
 const porcentajesController = require("../controllers/porcentajesController");
 const auth = require("../middleware/auth");
 
+const {agregarPorcentaje, todosPorcentajes, elPorcentaje, editarPorcentaje, eliminarPorcentaje, eliminarTodos} = porcentajesController
+
 router.post("/",
   auth,
-  porcentajesController.agregarPorcentaje
+  agregarPorcentaje
 );
 
 router.get("/",
   auth, 
-  porcentajesController.todosPorcentajes,
+  todosPorcentajes,
 );
 
 router.get("/:id",
   auth, 
-  porcentajesController.elPorcentaje,
+  elPorcentaje,
 );
 
 router.put("/:id",
   auth,
-  porcentajesController.editarPorcentaje
+  editarPorcentaje
 )
 
 router.delete("/:id",
   auth,
-  porcentajesController.eliminarPorcentaje
+  eliminarPorcentaje
 )
 
 router.delete("/",
   auth,
-  porcentajesController.eliminarTodos
+  eliminarTodos
 )
 
 module.exports = router;

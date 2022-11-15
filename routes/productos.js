@@ -4,40 +4,42 @@ const productosController = require("../controllers/productosController")
 const auth = require("../middleware/auth")
 const {check} = require("express-validator")
 
+const {crearProducto, todosProductos, elProducto, editarProducto, editarProductos, eliminarProducto, eliminarTodos} = productosController
+
 router.post("/",
     auth,
     [
         check("nombre", "El nombre es obligatorio").not().isEmpty()
     ],
-    productosController.crearProducto
+    crearProducto
 )
 
 router.get("/",
     auth,
-    productosController.todosProductos
+    todosProductos
 )
 
 router.get("/:id",
-    productosController.elProducto
+    elProducto
 )
 
 router.put("/:id",
     auth,
-    productosController.editarProducto
+    editarProducto
 )
 router.put("/",
     auth,
-    productosController.editarProductos
+    editarProductos
 )
 
 router.delete("/:id", 
     auth,
-    productosController.eliminarProducto
+    eliminarProducto
 )
 
 router.delete("/",
     auth,
-    productosController.eliminarTodos
+    eliminarTodos
 )
 
 module.exports = router;

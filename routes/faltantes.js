@@ -3,15 +3,17 @@ const router = express.Router();
 const faltantesController = require("../controllers/faltantesController");
 const auth = require("../middleware/auth");
 
+const {crearFaltante, eliminarFaltante, todosFaltantes} = faltantesController
+
 router.put("/:id",
   auth,
-  faltantesController.crearFaltante,
-  faltantesController.eliminarFaltante
+  crearFaltante,
+  eliminarFaltante
 );
 
 router.get("/", 
   auth, 
-  faltantesController.todosFaltantes
+  todosFaltantes
 );
 
 
