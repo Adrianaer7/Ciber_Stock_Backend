@@ -1,7 +1,7 @@
 const Producto = require("../models/Producto");
 const Rubro = require("../models/Rubro");
 
-exports.agregarRubro = async (req, res, next) => {
+exports.agregarRubro = async (req, res) => {
   try {
     const {nombre, rentabilidad} = req.body
 

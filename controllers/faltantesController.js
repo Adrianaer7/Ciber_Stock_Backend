@@ -27,7 +27,7 @@ exports.crearFaltante = async (req, res, next) => {
 };
 
 //cuando ponga el el boton de quitar faltante
-exports.eliminarFaltante = async (req, res, next) => {
+exports.eliminarFaltante = async (req, res) => {
   const {id} = req.params
 
   try {

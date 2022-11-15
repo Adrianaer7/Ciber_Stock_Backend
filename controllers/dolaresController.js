@@ -1,6 +1,6 @@
 const Dolares = require("../models/Dolar");
 
-exports.traerDolar = async (req, res, next) => {
+exports.traerDolar = async (req, res) => {
   try {
     const { precio} = req.body
     const elDolar = await Dolares.findOne({creador: req.usuario.id}) //encuentro el dolar creado por el usuario registrado
@@ -22,7 +22,7 @@ exports.traerDolar = async (req, res, next) => {
   }
 };
 
-exports.editarManualmente = async(req, res, next) => {
+exports.editarManualmente = async(req, res) => {
   try {
     if(req.body.dolarManual) {  //cuando edito el valor del dolar manualmente
       const {dolarManual} = req.body
@@ -45,7 +45,7 @@ exports.editarManualmente = async(req, res, next) => {
   }
 }
 
-exports.enviarDolar = async (req, res, next) => {
+exports.enviarDolar = async (req, res) => {
   try {
     const dolar = await Dolares.find({creador: req.usuario.id}).select("-__v -_id")
     res.json({dolar})

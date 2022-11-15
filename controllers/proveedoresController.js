@@ -1,6 +1,6 @@
 const Proveedor = require("../models/Proveedor");
 
-exports.agregarProveedor = async (req, res, next) => {
+exports.agregarProveedor = async (req, res) => {
   try {
    const {nombre, empresa, telEmpresa, telPersonal, email} = req.body
 

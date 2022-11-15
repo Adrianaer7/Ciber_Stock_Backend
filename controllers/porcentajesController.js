@@ -1,6 +1,6 @@
 const Porcentaje = require("../models/Porcentaje");
 
-exports.agregarPorcentaje = async (req, res, next) => {
+exports.agregarPorcentaje = async (req, res) => {
   try {
    const {nombre, comision, tipo} = req.body
 

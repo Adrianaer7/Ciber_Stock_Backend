@@ -87,11 +87,16 @@ exports.olvidePassword = async (req, res) => {
 
 exports.comprobarToken = async (req, res) => {
     const {token} = req.params
-    const tokenValido = await Usuario.findOne({token})
-    if(!tokenValido) {
-        return res.json({msg: false})
-    } 
-    res.json({msg: true})
+
+    try {
+        const tokenValido = await Usuario.findOne({token})
+        if(!tokenValido) {
+            return res.json({msg: false})
+        } 
+        res.json({msg: true})
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 exports.nuevoPassword = async (req, res) => {
@@ -115,7 +120,7 @@ exports.nuevoPassword = async (req, res) => {
 
 
 exports.traerTodos = async (req, res) => {
-    const usuarios = await Usuario.find({})
+    const usuarios = await Usuario.find({_id: req.usuario.id})
     if(!usuarios) {
         return res.json({msg: "No existen usuarios creados"})
     }
