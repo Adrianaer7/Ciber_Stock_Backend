@@ -63,9 +63,11 @@ exports.elProducto = async (req, res) => {
 }
 
 exports.editarProducto = async (req, res) => {
+    const {id} = req.params
+
    try {
        const {codigo, nombre, marca, modelo, barras, proveedor, notas} = req.body.producto
-       let producto = await Producto.findById(req.params.id)
+       let producto = await Producto.findById(id)
 
        if(producto.creador.toString() !== req.usuario.id){
            return res.status(401).json({msg: "No autorizado"})
@@ -92,7 +94,7 @@ exports.editarProducto = async (req, res) => {
         } else {
             nuevoProducto.faltante = false
         }
-       producto = await Producto.findByIdAndUpdate({_id: req.params.id}, nuevoProducto, {new: true})
+       producto = await Producto.findByIdAndUpdate({_id: id}, nuevoProducto, {new: true})
        res.json({producto})
    } catch (error) {
        console.log(error)
@@ -135,8 +137,10 @@ exports.editarProductos = async (req, res) => {
 }
 
 exports.eliminarProducto = async (req, res) => {
+    const {id} = req.params
+
     try {
-        let producto = await Producto.findById(req.params.id)
+        let producto = await Producto.findById(id)
 
         if(producto.creador.toString() !== req.usuario.id) {
             return res.status(401).json({msg: "No autorizado"})
@@ -145,16 +149,16 @@ exports.eliminarProducto = async (req, res) => {
             return res.status(404).json({msg: "Producto no encontrado"})
         }
 
-        const venta = await Venta.findOne({idProducto: req.params.id})
+        const venta = await Venta.findOne({idProducto: id})
 
         if(venta) {
             let ventaEditada = venta
             //para que al mostrar las ventas, no muestre opcion de eliminar o editar la venta, 
             ventaEditada.existeProducto = false
-            await Venta.findOneAndUpdate({idProducto: req.params.id}, ventaEditada, {new: true})
+            await Venta.findOneAndUpdate({idProducto: id}, ventaEditada, {new: true})
         }
 
-        await Producto.findOneAndRemove({_id: req.params.id})
+        await Producto.findOneAndRemove({_id: id})
         res.json({msg: "Producto eliminado"})
     } catch (error) {
         console.log(error)

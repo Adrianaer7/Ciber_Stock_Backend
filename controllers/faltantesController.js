@@ -2,8 +2,10 @@ const Producto = require("../models/Producto");
 
 //cuando haga click en el boton añadir faltante, viene a esta funcion
 exports.crearFaltante = async (req, res, next) => {
+  const {id} = req.params
+
   try {
-    let producto = await Producto.findById(req.params.id)
+    let producto = await Producto.findById(id)
 
     if(producto.creador.toString() !== req.usuario.id) {
       return res.status(400).json({msg: "No se puede agregar faltante. Acceso denegado"})
@@ -26,22 +28,28 @@ exports.crearFaltante = async (req, res, next) => {
 
 //cuando ponga el el boton de quitar faltante
 exports.eliminarFaltante = async (req, res, next) => {
-  let producto = await Producto.findById(req.params.id)
+  const {id} = req.params
 
-  if (producto.creador.toString() !== req.usuario.id) {
-    return res.status(400).json({ msg: "No se puede eliminar el faltante. Acceso denegado" });
-  }
-
-  if(producto.faltante === true) {  //solo si está como true lo elimina
-      producto.faltante = false;  //lo quito de faltante
-      producto.limiteFaltante = null  //elimino el numero para la alerta e faltante
-      producto.añadirFaltante = false //deshabilito el boton de añadir alerta
-      
-      const quitarFaltante = producto;
-      producto = await Producto.findByIdAndUpdate({ _id: req.params.id }, quitarFaltante, { new: true });
-      return res.json({ msg: "Faltante eliminado" });
-
+  try {
+    let producto = await Producto.findById(id)
+  
+    if (producto.creador.toString() !== req.usuario.id) {
+      return res.status(400).json({ msg: "No se puede eliminar el faltante. Acceso denegado" });
     }
+  
+    if(producto.faltante === true) {  //solo si está como true lo elimina
+        producto.faltante = false;  //lo quito de faltante
+        producto.limiteFaltante = null  //elimino el numero para la alerta e faltante
+        producto.añadirFaltante = false //deshabilito el boton de añadir alerta
+        
+        const quitarFaltante = producto;
+        producto = await Producto.findByIdAndUpdate({ _id: id }, quitarFaltante, { new: true });
+        return res.json({ msg: "Faltante eliminado" });
+  
+      }
+  } catch (error) {
+    console.log(error) 
+  }
 }
 
 exports.todosFaltantes = async (req, res) => {

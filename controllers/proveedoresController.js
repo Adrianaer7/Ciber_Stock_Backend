@@ -24,8 +24,10 @@ exports.todosProveedores = async (req, res) => {
 };
 
 exports.elProveedor = async (req,res) => {
+  const {id} = req.params
+
   try {
-    const proveedor = await Proveedor.findById(req.params.id)
+    const proveedor = await Proveedor.findById(id)
     if(!proveedor) {
       return res.json({msg: "El proveedor no existe"})
     }
@@ -36,10 +38,11 @@ exports.elProveedor = async (req,res) => {
 }
 
 exports.editarProveedor = async(req,res) => {
+  const {id} = req.params
   const {nombre, empresa, telEmpresa, telPersonal, email} = req.body
 
   try {
-    let proveedor = await Proveedor.findById(req.params.id)
+    let proveedor = await Proveedor.findById(id)
     
     if(proveedor.creador.toString() !== req.usuario.id) {
       return res.status(401).json({msg: "Acción no permitida"})
@@ -51,7 +54,7 @@ exports.editarProveedor = async(req,res) => {
 
     const nuevoProveedor = req.body
     nuevoProveedor.datos = (nombre + empresa + telPersonal + telEmpresa + email).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-    proveedor = await Proveedor.findByIdAndUpdate({_id: req.params.id}, nuevoProveedor, {new: true})
+    proveedor = await Proveedor.findByIdAndUpdate({_id: id}, nuevoProveedor, {new: true})
     res.json({proveedor})
   } catch (error) {
     console.log(error)
@@ -59,15 +62,17 @@ exports.editarProveedor = async(req,res) => {
 }
 
 exports.eliminarProveedor = async (req,res) => {
+  const {id} = req.params
+
   try {
-    const proveedor = await Proveedor.findById(req.params.id)
+    const proveedor = await Proveedor.findById(id)
     if(proveedor.creador.toString() !== req.usuario.id) {
       return res.json({msg: "Acción no válida"})
     }
     if(!proveedor) {
       return res.json({msg: "No se encontró el proveedor a eliminar"})
     }
-    await Proveedor.findOneAndRemove({_id: req.params.id})
+    await Proveedor.findOneAndRemove({_id: id})
     res.json({msg: "Proveedor eliminado"})
   } catch (error) {
     console.log(error)

@@ -1,8 +1,6 @@
 const Venta = require("../models/Venta");
 const Producto = require("../models/Producto");
 
-require("dotenv").config({ path: "variables.env" });
-
 exports.agregarVenta = async (req, res) => {
   try {
     const venta = new Venta(req.body);
@@ -24,8 +22,10 @@ exports.todasVentas = async (req, res) => {
 };
 
 exports.laVenta = async (req,res) => {
+  const {id} = req.params
+
   try {
-    const venta = await Venta.findById(req.params.id)
+    const venta = await Venta.findById(id)
     if(!venta) {
       return res.json({msg: "La venta no existe"})
     }
@@ -36,10 +36,12 @@ exports.laVenta = async (req,res) => {
 }
 
 exports.editarVenta = async(req,res) => {
+  const {id} = req.params
   const {cantidad, idProducto} = req.body
-  const producto = await Producto.findOne({_id: idProducto})
+
   try {
-    let venta = await Venta.findById(req.params.id)
+    const producto = await Producto.findOne({_id: idProducto})
+    let venta = await Venta.findById(id)
     
     if(!venta) {
       return res.status(404).json({msg: "La venta no existe"})
@@ -61,7 +63,7 @@ exports.editarVenta = async(req,res) => {
     //Descuento las unidades vendidas de la venta
     const nuevaVenta = venta
     nuevaVenta.unidades = nuevaVenta.unidades - cantidad
-    venta = await Venta.findByIdAndUpdate({_id: req.params.id}, nuevaVenta, {new: true})
+    venta = await Venta.findByIdAndUpdate({_id: id}, nuevaVenta, {new: true})
     res.json({venta})
   } catch (error) {
     console.log(error)
@@ -70,9 +72,10 @@ exports.editarVenta = async(req,res) => {
 }
 
 exports.eliminarVenta = async (req,res) => {
-  
+  const {id} = req.params
+
   try {
-    const venta = await Venta.findById(req.params.id)
+    const venta = await Venta.findById(id)
     
     if(!venta) {
       return res.json({msg: "No se encontró la venta a eliminar"})
@@ -93,7 +96,7 @@ exports.eliminarVenta = async (req,res) => {
     
     await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
     //Elimino la venta realizada
-    await Venta.findOneAndRemove({_id: req.params.id})
+    await Venta.findOneAndRemove({_id: id})
     res.json({msg: "Venta eliminada"})
   } catch (error) {
     console.log(error)

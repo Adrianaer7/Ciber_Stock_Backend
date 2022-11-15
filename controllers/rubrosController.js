@@ -31,8 +31,10 @@ exports.todosRubros = async (req, res) => {
 };
 
 exports.elRubro = async (req,res) => {
+  const {id} = req.params
+
   try {
-    const rubro = await Rubro.findById(req.params.id)
+    const rubro = await Rubro.findById(id)
     if(!rubro) {
       return res.json({msg: "El rubro no existe"})
     }
@@ -43,10 +45,11 @@ exports.elRubro = async (req,res) => {
 }
 
 exports.editarRubro = async(req,res) => {
+  const {id} = req.params
   const {nombre, rentabilidad} = req.body
   
   try {
-    let rubro = await Rubro.findById(req.params.id)
+    let rubro = await Rubro.findById(id)
     
     if(rubro.creador.toString() !== req.usuario.id) {
       return res.status(401).json({msg: "Acción no permitida"})
@@ -82,7 +85,7 @@ exports.editarRubro = async(req,res) => {
 
     const nuevoRubro = req.body
     nuevoRubro.datos = (nombre + rentabilidad).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-    rubro = await Rubro.findByIdAndUpdate({_id: req.params.id}, nuevoRubro, {new: true})
+    rubro = await Rubro.findByIdAndUpdate({_id: id}, nuevoRubro, {new: true})
     res.json({rubro})
   } catch (error) {
     console.log(error)
@@ -90,15 +93,17 @@ exports.editarRubro = async(req,res) => {
 }
 
 exports.eliminarRubro = async (req,res) => {
+  const {id} = req.params
+
   try {
-    const rubro = await Rubro.findById(req.params.id)
+    const rubro = await Rubro.findById(id)
     if(rubro.creador.toString() !== req.usuario.id) {
       return res.json({msg: "Acción no válida"})
     }
     if(!rubro) {
       return res.json({msg: "No se encontró el rubro a eliminar"})
     }
-    await Rubro.findOneAndRemove({_id: req.params.id})
+    await Rubro.findOneAndRemove({_id: id})
     res.json({msg: "Rubro eliminado"})
   } catch (error) {
     console.log(error)

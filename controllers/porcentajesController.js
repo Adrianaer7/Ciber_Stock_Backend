@@ -24,8 +24,10 @@ exports.todosPorcentajes = async (req, res) => {
 };
 
 exports.elPorcentaje = async (req,res) => {
+  const {id} = req.params
+
   try {
-    const porcentaje = await Porcentaje.findById(req.params.id)
+    const porcentaje = await Porcentaje.findById(id)
     if(!porcentaje) {
       return res.json({msg: "El porcentaje no existe"})
     }
@@ -36,10 +38,11 @@ exports.elPorcentaje = async (req,res) => {
 }
 
 exports.editarPorcentaje = async(req,res) => {
+  const {id} = req.params
   const {nombre, comision, tipo} = req.body
 
   try {
-    let porcentaje = await Porcentaje.findById(req.params.id)
+    let porcentaje = await Porcentaje.findById(id)
     
     if(porcentaje.creador.toString() !== req.usuario.id) {
       return res.status(401).json({msg: "Acción no permitida"})
@@ -51,7 +54,7 @@ exports.editarPorcentaje = async(req,res) => {
 
     const nuevoPorcentaje = req.body
     nuevoPorcentaje.datos = (nombre + comision + tipo).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-    porcentaje = await Porcentaje.findByIdAndUpdate({_id: req.params.id}, nuevoPorcentaje, {new: true})
+    porcentaje = await Porcentaje.findByIdAndUpdate({_id: id}, nuevoPorcentaje, {new: true})
     res.json({porcentaje})
   } catch (error) {
     console.log(error)
@@ -59,15 +62,17 @@ exports.editarPorcentaje = async(req,res) => {
 }
 
 exports.eliminarPorcentaje = async (req,res) => {
+  const {id} = req.params
+  
   try {
-    const porcentaje = await Porcentaje.findById(req.params.id)
+    const porcentaje = await Porcentaje.findById(id)
     if(porcentaje.creador.toString() !== req.usuario.id) {
       return res.json({msg: "Acción no válida"})
     }
     if(!porcentaje) {
       return res.json({msg: "No se encontró el porcentaje a eliminar"})
     }
-    await Porcentaje.findOneAndRemove({_id: req.params.id})
+    await Porcentaje.findOneAndRemove({_id: id})
     res.json({msg: "Porcentaje eliminado"})
   } catch (error) {
     console.log(error)

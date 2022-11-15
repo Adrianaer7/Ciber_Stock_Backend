@@ -2,7 +2,7 @@ const Usuario = require("../models/Usuario")
 const {validationResult} = require("express-validator")
 const generarJWT = require("../helpers/generarJWT")
 
-exports.autenticarUsuario  = async (req, res, next) => {
+exports.autenticarUsuario  = async (req, res) => {
 
     //Mostrar mensajes de error
     const errores = validationResult(req)   
