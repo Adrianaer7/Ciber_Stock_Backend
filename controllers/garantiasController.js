@@ -5,11 +5,12 @@ const Producto = require("../models/Producto")
 exports.crearGarantia = async(req,res) => {
     try {
         const {garantia, proveedor, codigo} = req.body
-        const productos = await Producto.find({codigo})
-        const id = productos[0]._id
-        const producto = await Garantia.find({idProducto: id})
+
+        const {id} = await Producto.findOne({codigo})
+        const laGarantia = await Garantia.findOne({idProducto: id})
+
         //nueva garantia
-        if(!producto || producto.length == 0) {
+        if(!laGarantia) {
             const nuevaGarantia = {
                 idProducto: id,
                 codigo,
@@ -21,14 +22,18 @@ exports.crearGarantia = async(req,res) => {
             res.json({garantiaNueva})
         }
         //si existe un producto con una garantia creada
-        if(producto.length > 0) {
-            let garantiaPasada = producto[0]
+        if(laGarantia) {
+            let garantiaPasada = laGarantia
             const {detalles} = garantiaPasada
-            const indice = detalles.map(detalle => detalle.proveedor).indexOf(proveedor)
-            let detalle = {caducidad: garantia, proveedor}
+            const indice = detalles.map(detalle => detalle.proveedor).indexOf(proveedor)    //si el proveedor que traigo del body es el mismo que está en el detalle, devuelvo su posicion en el array de detalles, sino devuelvo -1
+            let detalle = {
+                caducidad: garantia, 
+                proveedor
+            }
+            
             //si no existe el proveedor, creo una nueva garantia
             if(indice < 0) {
-                garantiaPasada.detalles = [...garantiaPasada.detalles, detalle]
+                garantiaPasada.detalles.push(detalle)
                 const nuevaGarantia = new Garantia(garantiaPasada)
                 await nuevaGarantia.save()
                 res.json({garantiaPasada})

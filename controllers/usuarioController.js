@@ -32,30 +32,35 @@ exports.nuevoUsuario = async (req, res) => {
         usuario = new Usuario(req.body)
         usuario.token = generarId()
         await usuario.save()
+
         //Enviar el email de confirmacion
         emailRegistro({
             email: usuario.email,
             nombre: usuario.nombre,
             token: usuario.token
         })
+
         res.json({msg: "Usuario creado correctamente. Revise su email para activar su cuenta."})
-        } catch (error) {
-            console.log(error)
-            res.status(400).send("Hubo un error")
-        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send("Hubo un error")
+    }
 }
 
 //Confirmar nuevo usuario
 exports.confirmar = async (req, res) => {
     const {token} = req.params
+
     const usuarioConfirmar = await  Usuario.findOne({token})
     if(!usuarioConfirmar) {
         return res.json({msg: "El usuario no existe o ya está verificado"})
     }
+
     try {
         usuarioConfirmar.confirmado = true
         usuarioConfirmar.token = ""
         await usuarioConfirmar.save()
+
         res.json({msg: `Hola, ${usuarioConfirmar.nombre}. Tu usuario ha sido verificado`})
     } catch (error) {
         console.log(error)
@@ -64,10 +69,12 @@ exports.confirmar = async (req, res) => {
 
 exports.olvidePassword = async (req, res) => {
     const {email} = req.body
+
     const usuario = await Usuario.findOne({email})
     if(!usuario) {
         return res.status(404).json({msg: "El usuario no existe"})
     } 
+
     try {
         usuario.token = generarId()
         await usuario.save()
@@ -93,6 +100,7 @@ exports.comprobarToken = async (req, res) => {
         if(!tokenValido) {
             return res.json({msg: false})
         } 
+
         res.json({msg: true})
     } catch (error) {
         console.log(error)
@@ -107,10 +115,10 @@ exports.nuevoPassword = async (req, res) => {
     if(!usuario) {
         return res.status(404).json({msg: "Token no válido"})
     }
-    usuario.password = contraseña
-    usuario.token = ""
-
+    
     try {
+        usuario.password = contraseña
+        usuario.token = ""
         await usuario.save()
         res.json({msg: "Contraseña modificada correctamente"})
     } catch (error) {
@@ -121,9 +129,11 @@ exports.nuevoPassword = async (req, res) => {
 
 exports.traerTodos = async (req, res) => {
     const usuarios = await Usuario.find({_id: req.usuario.id})
+
     if(!usuarios) {
         return res.json({msg: "No existen usuarios creados"})
     }
+    
     res.json({usuarios})
 }
 

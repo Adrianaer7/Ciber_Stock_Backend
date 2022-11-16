@@ -6,10 +6,10 @@ exports.agregarRubro = async (req, res) => {
     const {nombre, rentabilidad} = req.body
 
     const rubroIgual = await Rubro.findOne({nombre})
+    
     if(rubroIgual) {
       return res.json({msg: "Este rubro ya existe"})
     }
-
 
     const rubro = new Rubro(req.body);
     rubro.datos = (nombre + rentabilidad).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
@@ -66,7 +66,7 @@ exports.editarRubro = async(req,res) => {
     }
 
     //modifico los productos
-    productos.map(producto => {
+    productos.forEach(producto => {
       const {precio_venta, precio_compra_dolar, precio_compra_peso, valor_dolar_compra} = producto
 
       //cambio el valor del rubro para que no se quede con el valor viejo

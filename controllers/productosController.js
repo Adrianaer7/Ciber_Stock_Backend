@@ -15,11 +15,9 @@ exports.crearProducto = async (req, res) => {
         
         const producto = new Producto(req.body);
         producto.creador = req.usuario.id;
-
-        if(proveedor) {
-            producto.todos_proveedores = proveedor
-        }
-
+        producto.todos_proveedores = proveedor.trim() || [] //si no envio un proveedor lo dejo vacio
+        
+        
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
             producto.faltante = true
         }
@@ -70,30 +68,35 @@ exports.editarProducto = async (req, res) => {
        let producto = await Producto.findById(id)
 
        if(producto.creador.toString() !== req.usuario.id){
-           return res.status(401).json({msg: "No autorizado"})
+           return res.status(401).json({msg: "No autorizado"}) 
        }
        if(!producto) { 
            return res.status(404).json({msg: "El producto no existe"})
        }
+
         const nuevoProducto = req.body.producto
+
+        nuevoProducto.descripcion = (codigo + nombre + marca + modelo + barras + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
+
+        //listado proveedores
         if(proveedor && req.body.desdeForm) {
             if(!nuevoProducto.todos_proveedores.length) {   //si no hay ningun proveedor
-                nuevoProducto.todos_proveedores = [...nuevoProducto.todos_proveedores, proveedor]
+                nuevoProducto.todos_proveedores = proveedor
             } else {
                 let proveedorIgual = nuevoProducto.todos_proveedores.find(provider => provider === proveedor)
                 if(!proveedorIgual) {  //si existen proveedores, pero ninguno igual
-                    nuevoProducto.todos_proveedores = [...nuevoProducto.todos_proveedores, proveedor]
+                    nuevoProducto.todos_proveedores.push(proveedor)
                 }
             }
         }
-            
-       
-       nuevoProducto.descripcion = (codigo + nombre + marca + modelo + barras + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
+    
+        //faltante
        if(nuevoProducto.disponibles <= nuevoProducto.limiteFaltante && nuevoProducto.añadirFaltante) {
             nuevoProducto.faltante = true
         } else {
             nuevoProducto.faltante = false
         }
+
        producto = await Producto.findByIdAndUpdate({_id: id}, nuevoProducto, {new: true})
        res.json({producto})
    } catch (error) {
@@ -102,39 +105,57 @@ exports.editarProducto = async (req, res) => {
 }
 
 exports.editarProductos = async (req, res) => {
+    const {precio} = req.body
+
     try {
-        const {precio} = req.body
         let productos = await Producto.find({creador: req.usuario.id}).select("-__v").sort({creado: "desc"})
         let porcentajeEfectivo = await Porcentaje.findOne({tipo: "EFECTIVO"})
         let porcentajeTarjeta = await Porcentaje.findOne({tipo: "TARJETA"})
         let porcentajeAhoraDoce = await Porcentaje.findOne({tipo: "AHORADOCE"})
     
-        productos.map(producto => {
+        //modifico los productos a medida que se van recorriendo
+        const productoCambiado = async (producto) => {
+            await Producto.findByIdAndUpdate({_id: producto._id}, producto , {new: true} )
+        }
+
+        productos.forEach(producto => {
             let {precio_venta, valor_dolar_compra, precio_compra_peso} = producto;
-            if(valor_dolar_compra>0 && precio_venta> 0) {
-                let res1 = precio_venta / valor_dolar_compra
-                let res2 = (res1 * precio).toFixed(2)
-                producto.precio_venta_conocidos = res2
-                producto.precio_venta_efectivo = ((res2 * (100 + porcentajeEfectivo.comision)) / 100).toFixed(2)
-                producto.precio_venta_tarjeta = ((res2 * (100 + porcentajeTarjeta.comision)) / 100).toFixed(2)
-                producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
-                producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
-            }
-            if(precio_compra_peso>0 && precio_venta>0) {
-                let res1 = precio_venta / valor_dolar_compra
-                let res2 = (res1 * precio).toFixed(2)
-                producto.precio_venta_conocidos = res2
-                producto.precio_venta_efectivo = ((res2 * (100 + porcentajeEfectivo.comision)) / 100).toFixed(2)
-                producto.precio_venta_tarjeta = ((res2 * (100 + porcentajeTarjeta.comision)) / 100).toFixed(2)
-                producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
-                producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
-            }
+            
+            //en caso de que modifique el precio a 0, se reinician estos valores
             if(!precio_venta) {
                 producto.precio_venta_ahoraDoce = 0
                 producto.precio_venta_cuotas = 0
+
+                productoCambiado(producto)
+            }
+
+            //comprado a valor dolar
+            if(precio_venta>0 && valor_dolar_compra> 0) {
+                let res1 = precio_venta / valor_dolar_compra
+                let res2 = (res1 * precio).toFixed(2)
+                producto.precio_venta_conocidos = res2
+                producto.precio_venta_efectivo = ((res2 * (100 + porcentajeEfectivo.comision)) / 100).toFixed(2)
+                producto.precio_venta_tarjeta = ((res2 * (100 + porcentajeTarjeta.comision)) / 100).toFixed(2)
+                producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
+                producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
+                
+                productoCambiado(producto)
+            }
+
+            //comprado en pesos
+            if(precio_venta>0 && precio_compra_peso>0) {
+                let res1 = precio_venta / valor_dolar_compra
+                let res2 = (res1 * precio).toFixed(2)
+                producto.precio_venta_conocidos = res2
+                producto.precio_venta_efectivo = ((res2 * (100 + porcentajeEfectivo.comision)) / 100).toFixed(2)
+                producto.precio_venta_tarjeta = ((res2 * (100 + porcentajeTarjeta.comision)) / 100).toFixed(2)
+                producto.precio_venta_ahoraDoce = (((producto.precio_venta_tarjeta) * ((porcentajeAhoraDoce.comision) + 100)) / 100).toFixed(2)
+                producto.precio_venta_cuotas = (producto.precio_venta_ahoraDoce / 12).toFixed(2)
+
+                productoCambiado(producto)
             }
         })
-        res.json({productos})
+        res.json()  //devuelvo si o si un json
     } catch (error) {
         console.log(error)
     }
@@ -155,9 +176,9 @@ exports.eliminarProducto = async (req, res) => {
 
         const venta = await Venta.findOne({idProducto: id})
 
+        //para que al mostrar las ventas, no muestre opcion de eliminar o editar la venta
         if(venta) {
             let ventaEditada = venta
-            //para que al mostrar las ventas, no muestre opcion de eliminar o editar la venta, 
             ventaEditada.existeProducto = false
             await Venta.findOneAndUpdate({idProducto: id}, ventaEditada, {new: true})
         }

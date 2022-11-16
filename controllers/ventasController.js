@@ -76,6 +76,7 @@ exports.eliminarVenta = async (req,res) => {
 
   try {
     const venta = await Venta.findById(id)
+    const {idProducto, unidades} = venta
     
     if(!venta) {
       return res.json({msg: "No se encontró la venta a eliminar"})
@@ -84,17 +85,18 @@ exports.eliminarVenta = async (req,res) => {
     if(venta.creador.toString() !== req.usuario.id) {
       return res.json({msg: "Acción no válida"})
     }
-    const {idProducto, unidades} = venta
 
     //Devuelvo la unidad vendida al producto
     const producto = await Producto.findOne({_id: idProducto})
     if(!producto) {
       return res.json({msg: "No se pueden devolver las unidades porque el producto ya no existe"})
     }
+
     let nuevoProducto = producto
     nuevoProducto.disponibles = nuevoProducto.disponibles + unidades
     
     await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
+    
     //Elimino la venta realizada
     await Venta.findOneAndRemove({_id: id})
     res.json({msg: "Venta eliminada"})

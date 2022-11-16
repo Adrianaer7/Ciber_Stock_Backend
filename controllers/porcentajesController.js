@@ -66,6 +66,7 @@ exports.eliminarPorcentaje = async (req,res) => {
   
   try {
     const porcentaje = await Porcentaje.findById(id)
+    
     if(porcentaje.creador.toString() !== req.usuario.id) {
       return res.json({msg: "Acción no válida"})
     }
