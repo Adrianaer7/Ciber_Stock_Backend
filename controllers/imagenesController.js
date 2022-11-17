@@ -8,7 +8,7 @@ const path = require('path');
 exports.guardarImagen = async(req, res) => {
     const ruta = path.parse(__dirname); //devuelve un objeto que dentro contiene la propiedad dir con : D:\\Documentos\\Documentos\\Cursos\\Curso React\\Proyectos\\Ciber\\servidor
     const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))    //cambio la ruta para elegir donde quiero guardar las imagenes subidas. En este caso la guardo en el frontend
-
+    
     //Configurar el multer
     const configuracionMulter = {
         limits: {fileSize: 50485760 },   //permito que se suban imagenes de hasta 50 megas
