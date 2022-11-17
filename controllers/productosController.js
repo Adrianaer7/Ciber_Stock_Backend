@@ -102,9 +102,11 @@ exports.editarProducto = async (req, res) => {
         //Eliminar la imagen del fontend
         if(producto.imagen !== imagen) {    //si seleccioné una nueva imagen
             const {imagen} = producto
-            const ruta = path.parse(__dirname);
-            const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
-            fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
+            if(imagen) {
+                const ruta = path.parse(__dirname);
+                const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
+                fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
+            }
         }
 
        producto = await Producto.findByIdAndUpdate({_id: id}, nuevoProducto, {new: true})
@@ -194,10 +196,12 @@ exports.eliminarProducto = async (req, res) => {
 
         //Eliminar la imagen del fontend
         const {imagen} = producto
-        const ruta = path.parse(__dirname);
-        const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
-        
-        fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
+        if(imagen) {
+            const ruta = path.parse(__dirname);
+            const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
+            
+            fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
+        }
 
         //eliminar el producto
         await Producto.findOneAndRemove({_id: id})
