@@ -85,6 +85,9 @@ const ProductoSchema = mongoose.Schema({
   disponibles: {
     type: Number
   },
+  imagen: {
+    type: String
+  },
   notas: {
     type: String
   },

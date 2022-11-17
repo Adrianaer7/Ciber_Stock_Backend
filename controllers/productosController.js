@@ -3,6 +3,8 @@ const Producto = require("../models/Producto")
 const Porcentaje = require("../models/Porcentaje")
 const Venta = require("../models/Venta")
 const {validationResult} = require("express-validator")
+const fs = require("fs")
+const path = require('path');
 
 exports.crearProducto = async (req, res) => {
     //Revisar si hay errores
@@ -174,15 +176,21 @@ exports.eliminarProducto = async (req, res) => {
             return res.status(404).json({msg: "Producto no encontrado"})
         }
 
-        const venta = await Venta.findOne({idProducto: id})
-
         //para que al mostrar las ventas, no muestre opcion de eliminar o editar la venta
+        const venta = await Venta.findOne({idProducto: id})
         if(venta) {
             let ventaEditada = venta
             ventaEditada.existeProducto = false
             await Venta.findOneAndUpdate({idProducto: id}, ventaEditada, {new: true})
         }
 
+        //Eliminar la imagen del fontend
+        const {imagen} = producto
+        const ruta = path.parse(__dirname);
+        const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
+        fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
+
+        //eliminar el producto
         await Producto.findOneAndRemove({_id: id})
         res.json({msg: "Producto eliminado"})
     } catch (error) {

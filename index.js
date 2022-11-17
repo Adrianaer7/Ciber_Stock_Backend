@@ -27,6 +27,8 @@ app.use(cors(corsOptions))
 //Habilitar leer los valores de un body
 app.use(express.json());
 
+//Habilitar carpeta pública. De esta manera puedo acceder a los archivos que hay en la carpeta uploads poniendo el nombre del archivo en la url. Lo hago en [enlace].js
+app.use(express.static("uploads"))
 
 //Puerto de la app. Cuando haga el deployment en Heroku se espera que la variable de entorno se llame PORT
 const PORT = process.env.PORT || 4000 
@@ -35,6 +37,7 @@ const PORT = process.env.PORT || 4000
 app.use("/api/usuarios", require("./routes/usuarios"))
 app.use("/api/auth", require("./routes/auth"))
 app.use("/api/productos", require("./routes/productos"))
+app.use("/api/imagenes", require("./routes/imagenes"))
 app.use("/api/rubros", require("./routes/rubros"));
 app.use("/api/porcentajes", require("./routes/porcentajes"));
 app.use("/api/proveedores", require("./routes/proveedores"));
