@@ -101,8 +101,8 @@ exports.editarProducto = async (req, res) => {
 
         //Eliminar la imagen del fontend
         if(producto.imagen !== imagen) {    //si seleccioné una nueva imagen
-            const {imagen} = producto
-            if(imagen) {
+            if(producto.imagen) {
+                const {imagen} = producto
                 const ruta = path.parse(__dirname);
                 const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
                 fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
