@@ -1,10 +1,10 @@
-const os = require('os'); //agrego estas 2 lineas para que sea compatible con el node de windows 7
+import os from "os" //agrego estas 2 lineas para que sea compatible con el node de windows 7
 os.hostname = () => 'localhost';
 
-const nodemailer = require("nodemailer")
+import nodemailer from "nodemailer"
 
 
-exports.emailRegistro = async (datos) => {
+export const emailRegistro = async (datos) => {
   const {nombre, email, token}  = datos
   const transport = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -36,7 +36,7 @@ exports.emailRegistro = async (datos) => {
   })
 }
 
-exports.emailOlvidePassword = async (datos) => {
+export const emailOlvidePassword = async (datos) => {
   const {nombre, email, token}  = datos
 
   const transport = nodemailer.createTransport({

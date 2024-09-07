@@ -1,11 +1,18 @@
-const express = require("express")
+import express from "express"
+import auth from "../middleware/auth.js"
+import { check } from "express-validator"
+
+import  {
+    crearProducto, 
+    todosProductos, 
+    elProducto, 
+    editarProducto, 
+    editarProductos, 
+    eliminarProducto, 
+    eliminarTodos
+} from "../controllers/productosController.js"
+
 const router = express.Router()
-const productosController = require("../controllers/productosController")
-const auth = require("../middleware/auth")
-const {check} = require("express-validator")
-
-const {crearProducto, todosProductos, elProducto, editarProducto, editarProductos, eliminarProducto, eliminarTodos} = productosController
-
 router.post("/",
     auth,
     [
@@ -42,4 +49,4 @@ router.delete("/",
     eliminarTodos
 )
 
-module.exports = router;
+export default router

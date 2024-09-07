@@ -1,7 +1,7 @@
-const Producto = require("../models/Producto");
+import Producto from "../models/Producto.js";
 
 //cuando haga click en el boton añadir faltante, viene a esta funcion
-exports.crearFaltante = async (req, res, next) => {
+export const crearFaltante = async (req, res, next) => {
   const {id} = req.params
 
   try {
@@ -27,7 +27,7 @@ exports.crearFaltante = async (req, res, next) => {
 };
 
 //cuando ponga el el boton de quitar faltante
-exports.eliminarFaltante = async (req, res) => {
+export const eliminarFaltante = async (req, res) => {
   const {id} = req.params
 
   try {
@@ -51,7 +51,7 @@ exports.eliminarFaltante = async (req, res) => {
   }
 }
 
-exports.todosFaltantes = async (req, res) => {
+export const todosFaltantes = async (req, res) => {
   try {
     const faltantes = await Producto.find({creador: req.usuario.id, faltante: true}).select("-__v"); //trae todo menos ese campo
     res.json({faltantes})

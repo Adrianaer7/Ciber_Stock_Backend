@@ -1,10 +1,9 @@
-const express = require ("express")
+import express from "express"
+import auth from "../middleware/auth.js"
+
+import {crearGarantia, traerGarantias} from "../controllers/garantiasController.js"
+
 const router = express.Router()
-const garantiasController = require("../controllers/garantiasController");
-const auth = require("../middleware/auth");
-
-const {crearGarantia, traerGarantias} = garantiasController
-
 router.post("/",
     auth,
     crearGarantia
@@ -15,4 +14,4 @@ router.get("/",
     traerGarantias
 )
 
-module.exports = router;
+export default router;

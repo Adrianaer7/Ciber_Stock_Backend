@@ -1,10 +1,8 @@
-const express = require("express")
+import express from "express"
+import auth from "../middleware/auth.js"
+import  {crearCompra, traerCompras}  from "../controllers/comprasController.js"
+
 const router = express.Router()
-const comprasController = require("../controllers/comprasController")
-const auth = require("../middleware/auth")
-
-const {crearCompra, traerCompras} = comprasController
-
 router.post("/",
     auth,
     crearCompra
@@ -15,4 +13,4 @@ router.get("/",
     traerCompras
 )
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
-const Compra = require("../models/Compra")
-const Producto = require("../models/Producto")
+import Compra from "../models/Compra.js"
+import Producto from "../models/Producto.js"
 
 
-exports.crearCompra = async (req, res) => {
+export const crearCompra = async (req, res) => {
     try {
         const {nombre, marca, modelo, codigo, precio_compra_dolar, precio_compra_peso, valor_dolar_compra, proveedor, garantia, factura, barras, fecha_compra, notas} = req.body.producto
         const {id} = await Producto.findOne({codigo}) //busco un producto que coincida con el codigo que recibo al añadir stock y extraigo el id
@@ -59,7 +59,7 @@ exports.crearCompra = async (req, res) => {
 }
 
 
-exports.traerCompras = async (req, res) => {
+export const traerCompras = async (req, res) => {
     try {
         const todasCompras = await Compra.find({creador: req.usuario.id}).sort({creado: "desc"})
         const todas = todasCompras.map(compras => compras.historial.sort((a,b) => a.fecha_compra > b.fecha_compra ? 1 : -1) && compras )

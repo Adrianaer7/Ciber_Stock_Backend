@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ventaSchema = mongoose.Schema({
   codigo: {
@@ -62,4 +62,5 @@ const ventaSchema = mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Venta", ventaSchema);
+const Venta = mongoose.model("Venta", ventaSchema);
+export default Venta;

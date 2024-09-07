@@ -1,7 +1,7 @@
-const Venta = require("../models/Venta");
-const Producto = require("../models/Producto");
+import Venta from "../models/Venta.js";
+import Producto from "../models/Producto.js";
 
-exports.agregarVenta = async (req, res) => {
+export const agregarVenta = async (req, res) => {
   try {
     const venta = new Venta(req.body);
     venta.creador = req.usuario.id;
@@ -12,7 +12,7 @@ exports.agregarVenta = async (req, res) => {
   }
 };
 
-exports.todasVentas = async (req, res) => {
+export const todasVentas = async (req, res) => {
   try {
     const ventas = await Venta.find({creador: req.usuario.id}).select("-__v").sort({creado: "desc"});
     res.json({ ventas });
@@ -21,7 +21,7 @@ exports.todasVentas = async (req, res) => {
   }
 };
 
-exports.laVenta = async (req,res) => {
+export const laVenta = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -35,7 +35,7 @@ exports.laVenta = async (req,res) => {
   }
 }
 
-exports.editarVenta = async(req,res) => {
+export const editarVenta = async(req,res) => {
   const {id} = req.params
   const {cantidad, idProducto} = req.body
 
@@ -71,7 +71,7 @@ exports.editarVenta = async(req,res) => {
   
 }
 
-exports.eliminarVenta = async (req,res) => {
+export const eliminarVenta = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -105,7 +105,7 @@ exports.eliminarVenta = async (req,res) => {
   }
 }
 
-exports.eliminarTodas = async (req, res) => {
+export const eliminarTodas = async (req, res) => {
   try {
     let ventas = await Venta.find({creador: req.usuario.id})
 

@@ -1,14 +1,11 @@
-const Usuario = require("../models/Usuario")
-const {validationResult} = require("express-validator")
-const generarJWT = require("../helpers/generarJWT")
+import Usuario from "../models/Usuario.js"
+import { generarJWT } from "../helpers/generar.js"
+import validarBody from "../helpers/validar.js"
 
-exports.autenticarUsuario  = async (req, res) => {
+export const autenticarUsuario  = async (req, res) => {
 
     //Mostrar mensajes de error
-    const errores = validationResult(req)   
-    if(!errores.isEmpty()) { 
-        return res.status(400).json({msg: errores.array()[0].msg}) 
-    }
+    validarBody(req, res)
 
     //Buscar el usuario para ver si está registrado
     const {email, password} = req.body
@@ -36,7 +33,7 @@ exports.autenticarUsuario  = async (req, res) => {
 }
 
 
-exports.usuarioAutenticado = (req, res) => {
+export const usuarioAutenticado = (req, res) => {
     try {
         res.json({usuario: req.usuario})
     } catch (error) {

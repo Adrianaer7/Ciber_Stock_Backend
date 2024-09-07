@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 
 const porcentajeSchema = mongoose.Schema({
   nombre: {
@@ -19,4 +18,5 @@ const porcentajeSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Porcentaje", porcentajeSchema);
+const Porcentaje = mongoose.model("Porcentaje", porcentajeSchema);
+export default Porcentaje;

@@ -1,12 +1,13 @@
-const Producto = require("../models/Producto")
-const Compra = require("../models/Compra")
-require("dotenv").config({path: 'variables.env'}) 
-const pdf = require("html-pdf")
-const fs = require("fs")
-const generarFecha = require("../helpers/generarFecha")
+import Producto from "../models/Producto.js"
+import Compra from "../models/Compra.js"
+import dotenv from "dotenv"
+import pdf from "html-pdf"
+import fs from "fs"
+import {generarFecha} from "../helpers/generar.js"
+dotenv.config({path: 'variables.env'}) 
 
 
-exports.generarPDF = async(req,res, next) => {
+export const generarPDF = async(req,res, next) => {
 
     const productos = await Producto.find({creador: req.usuario.id})
     const compras = await Compra.find({creador: req.usuario.id})

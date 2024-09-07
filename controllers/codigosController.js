@@ -1,6 +1,6 @@
-const Producto = require("../models/Producto")
+import Producto from "../models/Producto.js"
 
-exports.todosCodigos = async(req,res) => {
+export const todosCodigos = async(req,res) => {
     try {
         const productos = await Producto.find({creador: req.usuario.id})
         const codigos = productos.map(producto => producto.codigo)

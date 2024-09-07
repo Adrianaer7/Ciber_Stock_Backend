@@ -1,17 +1,16 @@
-const mongoose = require("mongoose")
-const Producto = require("../models/Producto")
-const Porcentaje = require("../models/Porcentaje")
-const Venta = require("../models/Venta")
-const {validationResult} = require("express-validator")
-const fs = require("fs")
-const path = require('path');
+import mongoose from "mongoose"
+import Producto from "../models/Producto.js"
+import Porcentaje from "../models/Porcentaje.js"
+import Venta from "../models/Venta.js"
+import fs from "fs"
+import path from "path"
+import validarBody from "../helpers/validar.js"
 
-exports.crearProducto = async (req, res) => {
+export const crearProducto = async (req, res) => {
+
     //Revisar si hay errores
-    const errores = validationResult(req)   
-    if(!errores.isEmpty()) {  
-        return res.status(400).json({errores: errores.array()}) 
-    }
+    validarBody(req, res)
+
     try {
         const { codigo, nombre, marca, modelo, barras, proveedor, notas } = req.body;
         
@@ -33,7 +32,7 @@ exports.crearProducto = async (req, res) => {
     }
 }
 
-exports.todosProductos = async (req, res) => {
+export const todosProductos = async (req, res) => {
     try {
         const productos = await Producto.find({creador: req.usuario.id}).sort({creado: "desc"})
         res.json({productos})
@@ -42,7 +41,7 @@ exports.todosProductos = async (req, res) => {
     }
 }
 
-exports.elProducto = async (req, res) => {
+export const elProducto = async (req, res) => {
     const {id} = req.params
 
     const urlValida = mongoose.Types.ObjectId.isValid(id)   //comprueba que la url es de tipo objectId
@@ -62,7 +61,7 @@ exports.elProducto = async (req, res) => {
     }
 }
 
-exports.editarProducto = async (req, res) => {
+export const editarProducto = async (req, res) => {
     const {id} = req.params
 
    try {
@@ -116,7 +115,7 @@ exports.editarProducto = async (req, res) => {
    }
 }
 
-exports.editarProductos = async (req, res) => {
+export const editarProductos = async (req, res) => {
     const {precio} = req.body
 
     try {
@@ -173,7 +172,7 @@ exports.editarProductos = async (req, res) => {
     }
 }
 
-exports.eliminarProducto = async (req, res) => {
+export const eliminarProducto = async (req, res) => {
     const {id} = req.params
 
     try {
@@ -211,7 +210,7 @@ exports.eliminarProducto = async (req, res) => {
     }
 }
 
-exports.eliminarTodos = async (req, res) => {
+export const eliminarTodos = async (req, res) => {
     try {
         let productos = await Producto.find({creador: req.usuario.id})
         

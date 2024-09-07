@@ -1,7 +1,8 @@
-const mongoose = require("mongoose")
-require("dotenv").config({path: "variables.env"})
+import mongoose from "mongoose"
+import dotenv from "dotenv"
+dotenv.config({path: "variables.env"})
 
-module.exports = conectarDB = async () => {
+const conectarDB = async () => {
     try {   
         await mongoose.connect(process.env.DB_URL)
         console.log("DB conectada") 
@@ -10,3 +11,5 @@ module.exports = conectarDB = async () => {
         process.exit(1) //En caso de que haya un error en la app, detenerla
     }
 }
+
+export default conectarDB

@@ -1,8 +1,8 @@
-const Garantia = require("../models/Garantia")
-const Producto = require("../models/Producto")
+import Garantia from "../models/Garantia.js"
+import Producto from "../models/Producto.js"
 
 
-exports.crearGarantia = async(req,res) => {
+export const crearGarantia = async(req,res) => {
     try {
         const {garantia, proveedor, codigo} = req.body
 
@@ -50,7 +50,7 @@ exports.crearGarantia = async(req,res) => {
     }
 }
 
-exports.traerGarantias = async(req,res) => {
+export const traerGarantias = async(req,res) => {
     try {
         const garantias = await Garantia.find({creador: req.usuario.id}) 
         res.json({garantias})

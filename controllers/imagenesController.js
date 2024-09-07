@@ -1,11 +1,9 @@
-const mongoose = require("mongoose")
-const Producto = require("../models/Producto")
-const generarId = require("../helpers/generarId")
-const multer = require("multer")
-const path = require('path');
+import Producto from "../models/Producto.js";
+import multer from "multer";
+import path from "path";
+import { generarId } from "../helpers/generar.js";
 
-
-exports.guardarImagen = async(req, res) => {
+export const guardarImagen = async(req, res) => {
     const ruta = path.parse(__dirname); //devuelve un objeto que dentro contiene la propiedad dir con : D:\\Documentos\\Documentos\\Cursos\\Curso React\\Proyectos\\Ciber\\servidor
     const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))    //cambio la ruta para elegir donde quiero guardar las imagenes subidas. En este caso la guardo en el frontend
     

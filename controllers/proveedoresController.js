@@ -1,6 +1,6 @@
-const Proveedor = require("../models/Proveedor");
+import Proveedor from "../models/Proveedor.js";
 
-exports.agregarProveedor = async (req, res) => {
+export const agregarProveedor = async (req, res) => {
   try {
    const {nombre, empresa, telEmpresa, telPersonal, email} = req.body
 
@@ -14,7 +14,7 @@ exports.agregarProveedor = async (req, res) => {
   }
 };
 
-exports.todosProveedores = async (req, res) => {
+export const todosProveedores = async (req, res) => {
   try {
     const proveedores = await Proveedor.find({creador: req.usuario.id}).select("-__v");
     res.json({ proveedores });
@@ -23,7 +23,7 @@ exports.todosProveedores = async (req, res) => {
   }
 };
 
-exports.elProveedor = async (req,res) => {
+export const elProveedor = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -37,7 +37,7 @@ exports.elProveedor = async (req,res) => {
   }
 }
 
-exports.editarProveedor = async(req,res) => {
+export const editarProveedor = async(req,res) => {
   const {id} = req.params
   const {nombre, empresa, telEmpresa, telPersonal, email} = req.body
 
@@ -61,7 +61,7 @@ exports.editarProveedor = async(req,res) => {
   }
 }
 
-exports.eliminarProveedor = async (req,res) => {
+export const eliminarProveedor = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -79,7 +79,7 @@ exports.eliminarProveedor = async (req,res) => {
   }
 }
 
-exports.eliminarTodos = async (req, res) => {
+export const eliminarTodos = async (req, res) => {
   try {
     let proveedores = await Proveedor.find({creador: req.usuario.id})
 

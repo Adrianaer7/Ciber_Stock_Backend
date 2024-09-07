@@ -1,23 +1,18 @@
-const Usuario = require("../models/Usuario")
-const Compra = require("../models/Compra")
-const Garantia = require("../models/Garantia")
-const Producto = require("../models/Producto")
-const Proveedor = require("../models/Proveedor")
-const Rubro = require("../models/Rubro")
-const Dolar = require("../models/Dolar")
-const {validationResult} = require("express-validator") //obtiene el resultado de la validacion que se realiza en la ruta
-const generarId = require("../helpers/generarId")
-const enviarEmail = require("../helpers/enviarEmail")
+import Usuario from "../models/Usuario.js"
+import Compra from "../models/Compra.js"
+import Garantia from "../models/Garantia.js"
+import Producto from "../models/Producto.js"
+import Proveedor from "../models/Proveedor.js"
+import Rubro from "../models/Rubro.js"
+import Dolar from "../models/Dolar.js"
+import {emailRegistro, emailOlvidePassword} from "../helpers/enviarEmail.js"
+import { generarId } from "../helpers/generar.js"
+import validarBody from "../helpers/validar.js"
 
-const {emailRegistro, emailOlvidePassword} = enviarEmail
-
-exports.nuevoUsuario = async (req, res) => {
+export const nuevoUsuario = async (req, res) => {
 
     //Mostrar mensajes de error
-    const errores = validationResult(req)   //me devuelve el array con el mensaje de error que definí en la ruta, junto con el campo al que se le atribuye el error, y el body, que es de donde lo traigo
-    if(!errores.isEmpty()) {    //si hay errores
-        return res.status(400).json({msg: errores.array()[0].msg}) //muestro el array de errores
-    }
+    validarBody(req, res)
     
     //Verificar si el usuario ya existe
     const {email} = req.body 
@@ -48,7 +43,7 @@ exports.nuevoUsuario = async (req, res) => {
 }
 
 //Confirmar nuevo usuario
-exports.confirmar = async (req, res) => {
+export const confirmar = async (req, res) => {
     const {token} = req.params
 
     const usuarioConfirmar = await  Usuario.findOne({token})
@@ -67,7 +62,7 @@ exports.confirmar = async (req, res) => {
     }
 }
 
-exports.olvidePassword = async (req, res) => {
+export const olvidePassword = async (req, res) => {
     const {email} = req.body
 
     const usuario = await Usuario.findOne({email})
@@ -92,7 +87,7 @@ exports.olvidePassword = async (req, res) => {
     }
 }
 
-exports.comprobarToken = async (req, res) => {
+export const comprobarToken = async (req, res) => {
     const {token} = req.params
 
     try {
@@ -107,7 +102,7 @@ exports.comprobarToken = async (req, res) => {
     }
 }
 
-exports.nuevoPassword = async (req, res) => {
+export const nuevoPassword = async (req, res) => {
     const {token} = req.params 
     const {contraseña} = req.body
 
@@ -127,7 +122,7 @@ exports.nuevoPassword = async (req, res) => {
 }
 
 
-exports.traerTodos = async (req, res) => {
+export const traerTodos = async (req, res) => {
     const usuarios = await Usuario.find({_id: req.usuario.id})
 
     if(!usuarios) {
@@ -138,7 +133,7 @@ exports.traerTodos = async (req, res) => {
 }
 
 //Elimina el usuario que está logeado
-exports.eliminarUsuario = async (req,res) => {
+export const eliminarUsuario = async (req,res) => {
     try {
         const resultado = await Usuario.find({_id: req.usuario.id})
 

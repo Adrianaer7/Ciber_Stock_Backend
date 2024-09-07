@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-
+import mongoose from "mongoose";
 
 const rubroSchema = mongoose.Schema({
   nombre: {
@@ -16,4 +15,6 @@ const rubroSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Rubro", rubroSchema);
+const Rubro = mongoose.model("Rubro", rubroSchema);
+export default Rubro;
+

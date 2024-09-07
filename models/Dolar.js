@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const DolaresSchema = mongoose.Schema({
   precio: {
@@ -13,4 +13,6 @@ const DolaresSchema = mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Dolar", DolaresSchema);
+const Dolares = mongoose.model("Dolares", DolaresSchema);
+export default Dolares;
+

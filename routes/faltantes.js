@@ -1,10 +1,13 @@
-const express = require("express");
+import express from "express"
+import auth from "../middleware/auth.js";
+
+import {
+  crearFaltante, 
+  eliminarFaltante, 
+  todosFaltantes
+} from "../controllers/faltantesController.js"
+
 const router = express.Router();
-const faltantesController = require("../controllers/faltantesController");
-const auth = require("../middleware/auth");
-
-const {crearFaltante, eliminarFaltante, todosFaltantes} = faltantesController
-
 router.put("/:id",
   auth,
   crearFaltante,
@@ -16,5 +19,4 @@ router.get("/",
   todosFaltantes
 );
 
-
-module.exports = router;
+export default router;

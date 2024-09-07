@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const proveedorSchema =  mongoose.Schema({
   nombre: {
@@ -37,4 +37,5 @@ const proveedorSchema =  mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Proveedores", proveedorSchema);
+const Proveedor = mongoose.model("Proveedor", proveedorSchema);
+export default Proveedor;

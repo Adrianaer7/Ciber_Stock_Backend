@@ -1,10 +1,16 @@
-const express = require("express");
+import express from "express"
+import auth from "../middleware/auth.js";
+
+import {
+  agregarPorcentaje, 
+  todosPorcentajes, 
+  elPorcentaje, 
+  editarPorcentaje, 
+  eliminarPorcentaje, 
+  eliminarTodos
+} from "../controllers/porcentajesController.js"
+
 const router = express.Router();
-const porcentajesController = require("../controllers/porcentajesController");
-const auth = require("../middleware/auth");
-
-const {agregarPorcentaje, todosPorcentajes, elPorcentaje, editarPorcentaje, eliminarPorcentaje, eliminarTodos} = porcentajesController
-
 router.post("/",
   auth,
   agregarPorcentaje
@@ -35,4 +41,4 @@ router.delete("/",
   eliminarTodos
 )
 
-module.exports = router;
+export default router;

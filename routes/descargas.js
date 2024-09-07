@@ -1,13 +1,11 @@
-const express = require("express")
+import express from "express"
+import auth from "../middleware/auth.js"
+import {generarPDF} from "../controllers/descargasController.js"
+
 const router = express.Router()
-const descargasController = require("../controllers/descargasController")
-const auth = require("../middleware/auth")
-
-const {generarPDF} = descargasController
-
 router.get("/",
     auth,
     generarPDF
 )
 
-module.exports = router;
+export default router;

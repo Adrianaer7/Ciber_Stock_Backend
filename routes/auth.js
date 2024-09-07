@@ -1,11 +1,9 @@
-const express = require("express")
+import express from "express"
+import { check } from "express-validator"
+import auth from "../middleware/auth.js"
+import {autenticarUsuario, usuarioAutenticado} from "../controllers/authController.js"
+
 const router = express.Router()
-const authController = require("../controllers/authController")
-const {check} = require("express-validator")
-const auth = require("../middleware/auth")
-
-const {autenticarUsuario, usuarioAutenticado} = authController
-
 router.post("/",
     [
        check("email", "Agrega un email valido").isEmail(),
@@ -19,4 +17,4 @@ router.get("/",
     usuarioAutenticado
 )
 
-module.exports = router;
+export default router

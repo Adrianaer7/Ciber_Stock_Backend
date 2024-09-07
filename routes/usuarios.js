@@ -1,10 +1,8 @@
-const express = require("express")
-const router = express.Router()
-const {check} = require("express-validator")
-const usuarioController = require("../controllers/usuarioController")
-const auth = require("../middleware/auth");
+import express from "express"
+import { check } from "express-validator";
+import auth from "../middleware/auth.js";
 
-const {
+import  {
     nuevoUsuario,
     traerTodos,
     confirmar,
@@ -12,8 +10,9 @@ const {
     comprobarToken,
     nuevoPassword,
     eliminarUsuario
-} = usuarioController
+} from  "../controllers/usuarioController.js"
 
+const router = express.Router()
 router.post("/",
     [
         check("nombre", "El nombre es obligatorio").not().isEmpty(),
@@ -41,4 +40,4 @@ router.delete("/",
     eliminarUsuario
 )
 
-module.exports = router;
+export default router

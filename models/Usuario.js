@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-const bcrypt = require("bcrypt")
+import mongoose from "mongoose";
+import bcrypt from "bcrypt"
 
 const usuarioSchema = mongoose.Schema({
     email: {
@@ -43,4 +43,6 @@ usuarioSchema.methods.comprobarPassword = async function(passwordFormulario) {
     return await  bcrypt.compare(passwordFormulario, this.password)  //this.password contiene la password del usuarii, y la compara con la que viene del body. Funcion que se ejecuta en authController. Esto retorna true o false
 }
 
-module.exports = mongoose.model("Usuarios", usuarioSchema)  //Si todavia no fue creado ningun usuario, MongoDB crea automaticamente colecciones de nuestro registro. En este caso seria usuarios
+//Si todavia no fue creado ningun usuario, MongoDB crea automaticamente colecciones de nuestro registro. En este caso seria usuarios
+const Usuario = mongoose.model("Usuario", usuarioSchema);
+export default Usuario;

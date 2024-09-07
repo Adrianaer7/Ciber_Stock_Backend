@@ -1,7 +1,7 @@
-const Producto = require("../models/Producto");
-const Rubro = require("../models/Rubro");
+import Producto from "../models/Producto.js";
+import Rubro from "../models/Rubro.js";
 
-exports.agregarRubro = async (req, res) => {
+export const agregarRubro = async (req, res) => {
   try {
     const {nombre, rentabilidad} = req.body
 
@@ -21,7 +21,7 @@ exports.agregarRubro = async (req, res) => {
   }
 };
 
-exports.todosRubros = async (req, res) => {
+export const todosRubros = async (req, res) => {
   try {
     const rubros = await Rubro.find({creador: req.usuario.id}).select("-__v");
     res.json({ rubros });
@@ -30,7 +30,7 @@ exports.todosRubros = async (req, res) => {
   }
 };
 
-exports.elRubro = async (req,res) => {
+export const elRubro = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -44,7 +44,7 @@ exports.elRubro = async (req,res) => {
   }
 }
 
-exports.editarRubro = async(req,res) => {
+export const editarRubro = async(req,res) => {
   const {id} = req.params
   const {nombre, rentabilidad} = req.body
   
@@ -92,7 +92,7 @@ exports.editarRubro = async(req,res) => {
   }
 }
 
-exports.eliminarRubro = async (req,res) => {
+export const eliminarRubro = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -110,7 +110,7 @@ exports.eliminarRubro = async (req,res) => {
   }
 }
 
-exports.eliminarTodos = async (req, res) => {
+export const eliminarTodos = async (req, res) => {
   try {
     let rubros = await Rubro.find({creador: req.usuario.id})
 

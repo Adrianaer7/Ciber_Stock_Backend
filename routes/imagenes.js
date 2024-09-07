@@ -1,12 +1,12 @@
-const express = require("express")
-const router = express.Router()
-const auth = require("../middleware/auth")
-const imagenesController = require("../controllers/imagenesController")
-const {guardarImagen} = imagenesController
+import express from "express"
+import auth from "../middleware/auth.js"
 
+import  {guardarImagen} from "../controllers/imagenesController.js"
+
+const router = express.Router()
 router.post("/",
     auth,
     guardarImagen
 )
 
-module.exports = router;
+export default router

@@ -1,10 +1,13 @@
-const express = require("express");
+import express from "express"
+import auth from "../middleware/auth.js";
+
+import {
+  traerDolar, 
+  enviarDolar,
+  editarManualmente
+} from "../controllers/dolaresController.js"
+
 const router = express.Router();
-const dolaresController = require("../controllers/dolaresController");
-const auth = require("../middleware/auth");
-
-const {traerDolar, enviarDolar, editarManualmente} = dolaresController
-
 router.post("/",
   auth,
   traerDolar
@@ -20,4 +23,4 @@ router.put("/",
   editarManualmente
 )
 
-module.exports = router;
+export default router;

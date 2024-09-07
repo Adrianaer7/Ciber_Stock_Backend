@@ -1,6 +1,7 @@
-const Porcentaje = require("../models/Porcentaje");
+import Porcentaje from "../models/Porcentaje.js";
 
-exports.agregarPorcentaje = async (req, res) => {
+
+ export const agregarPorcentaje = async (req, res) => {
   try {
    const {nombre, comision, tipo} = req.body
 
@@ -14,7 +15,7 @@ exports.agregarPorcentaje = async (req, res) => {
   }
 };
 
-exports.todosPorcentajes = async (req, res) => {
+ export const todosPorcentajes = async (req, res) => {
   try {
     const porcentajes = await Porcentaje.find({creador: req.usuario.id}).select("-__v");
     res.json({ porcentajes });
@@ -23,7 +24,7 @@ exports.todosPorcentajes = async (req, res) => {
   }
 };
 
-exports.elPorcentaje = async (req,res) => {
+ export const elPorcentaje = async (req,res) => {
   const {id} = req.params
 
   try {
@@ -37,7 +38,7 @@ exports.elPorcentaje = async (req,res) => {
   }
 }
 
-exports.editarPorcentaje = async(req,res) => {
+ export const editarPorcentaje = async(req,res) => {
   const {id} = req.params
   const {nombre, comision, tipo} = req.body
 
@@ -61,7 +62,7 @@ exports.editarPorcentaje = async(req,res) => {
   }
 }
 
-exports.eliminarPorcentaje = async (req,res) => {
+ export const eliminarPorcentaje = async (req,res) => {
   const {id} = req.params
   
   try {
@@ -80,7 +81,7 @@ exports.eliminarPorcentaje = async (req,res) => {
   }
 }
 
-exports.eliminarTodos = async (req, res) => {
+ export const eliminarTodos = async (req, res) => {
   try {
     let porcentajes = await Porcentaje.find({creador: req.usuario.id})
 

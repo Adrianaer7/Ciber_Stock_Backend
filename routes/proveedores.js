@@ -1,10 +1,16 @@
-const express = require("express");
+import express from "express";
+import auth from "../middleware/auth.js";
+
+import {
+    agregarProveedor, 
+    todosProveedores,
+    elProveedor, 
+    editarProveedor, 
+    eliminarProveedor, 
+    eliminarTodos
+} from "../controllers/proveedoresController.js"
+
 const router = express.Router();
-const proveedoresController = require("../controllers/proveedoresController");
-const auth = require("../middleware/auth");
-
-const {agregarProveedor, todosProveedores, elProveedor, editarProveedor, eliminarProveedor, eliminarTodos} = proveedoresController
-
 router.post("/", 
     auth, 
     agregarProveedor
@@ -35,4 +41,4 @@ router.delete("/",
     eliminarTodos
 )
 
-module.exports = router;
+export default router;

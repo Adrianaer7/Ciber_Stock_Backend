@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose";
 
 const GarantiaSchema = mongoose.Schema({
   idProducto: {
@@ -23,4 +23,5 @@ const GarantiaSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Garantia", GarantiaSchema)
+const Garantia = mongoose.model("Garantia", GarantiaSchema);
+export default Garantia;
