@@ -4,6 +4,8 @@ import Porcentaje from "../models/Porcentaje.js"
 import Venta from "../models/Venta.js"
 import fs from "fs"
 import path from "path"
+import {dirname} from "path"
+import { fileURLToPath } from 'url';
 import validarBody from "../helpers/validar.js"
 
 export const crearProducto = async (req, res) => {
@@ -102,6 +104,8 @@ export const editarProducto = async (req, res) => {
         if(producto.imagen !== imagen) {    //si seleccioné una nueva imagen
             if(producto.imagen) {
                 const {imagen} = producto
+                const __filename = fileURLToPath(import.meta.url);
+                const __dirname = dirname(__filename);
                 const ruta = path.parse(__dirname);
                 const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
                 fs.unlinkSync(rutaModificada + `/${imagen}`) //unlink es una funcion que permite eliminar un archivo del SO.
@@ -196,6 +200,8 @@ export const eliminarProducto = async (req, res) => {
         //Eliminar la imagen del fontend
         const {imagen} = producto
         if(imagen) {
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = dirname(__filename);
             const ruta = path.parse(__dirname);
             const rutaModificada = (ruta.dir.replace("servidor", "cliente/public/imagenes"))
             
