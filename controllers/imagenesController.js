@@ -36,7 +36,7 @@ export const guardarImagen = async(req, res) => {
     
     upload(req, res, async (error) => { //importo error porque no es un trycatch        
         if(!error) {
-            //busco un producto que contenga el nombre de la imagen original
+            //busco un producto que contenga el nombre de la imagen original            
             const producto = await Producto.findOne({imagen: req.file.originalname})
             const {_id} = producto
 
