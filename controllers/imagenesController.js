@@ -50,7 +50,7 @@ export const guardarImagen = async (req, res) => {
             }
 
             producto.imagen = req.file.filename
-            await Producto.findByIdAndUpdate({ _id: producto._id }, producto, { new: true })
+            await Producto.findByIdAndUpdate({ _id: producto._id }, producto, { returnDocument: "after" })
 
             return res.json({ imagen: req.file.filename })
         } catch (err) {

@@ -55,7 +55,7 @@ import Porcentaje from "../models/Porcentaje.js";
 
     const nuevoPorcentaje = req.body
     nuevoPorcentaje.datos = (nombre + comision + tipo).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-    porcentaje = await Porcentaje.findByIdAndUpdate({_id: id}, nuevoPorcentaje, {new: true})
+    porcentaje = await Porcentaje.findByIdAndUpdate({_id: id}, nuevoPorcentaje, { returnDocument: "after" })
     res.json({porcentaje})
   } catch (error) {
     console.log(error)

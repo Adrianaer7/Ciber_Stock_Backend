@@ -1,5 +1,6 @@
 import Producto from "../models/Producto.js";
 import Rubro from "../models/Rubro.js";
+import { emitirRubros } from "../config/socket.js";
 
 export const agregarRubro = async (req, res) => {
   try {
@@ -15,6 +16,7 @@ export const agregarRubro = async (req, res) => {
     rubro.datos = (nombre + rentabilidad).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
     rubro.creador = req.usuario.id;
     await rubro.save();
+    emitirRubros()
     res.json({ rubro });
   } catch (error) {
     console.log(error);
@@ -62,7 +64,7 @@ export const editarRubro = async(req,res) => {
     let productos = await Producto.find({creador: req.usuario.id})
     
     const productoCambiado = async (producto) => {
-      await Producto.findByIdAndUpdate({_id: producto._id}, producto , {new:true} )
+      await Producto.findByIdAndUpdate({_id: producto._id}, producto , { returnDocument: "after" } )
     }
 
     //modifico los productos
@@ -85,7 +87,8 @@ export const editarRubro = async(req,res) => {
 
     const nuevoRubro = req.body
     nuevoRubro.datos = (nombre + rentabilidad).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-    rubro = await Rubro.findByIdAndUpdate({_id: id}, nuevoRubro, {new: true})
+    rubro = await Rubro.findByIdAndUpdate({_id: id}, nuevoRubro, { returnDocument: "after" })
+    emitirRubros()
     res.json({rubro})
   } catch (error) {
     console.log(error)
@@ -104,6 +107,7 @@ export const eliminarRubro = async (req,res) => {
       return res.json({msg: "No se encontró el rubro a eliminar"})
     }
     await Rubro.findOneAndDelete({_id: id})
+    emitirRubros()
     res.json({msg: "Rubro eliminado"})
   } catch (error) {
     console.log(error)

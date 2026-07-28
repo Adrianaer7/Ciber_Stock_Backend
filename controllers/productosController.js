@@ -7,6 +7,7 @@ import path from "path"
 import {dirname} from "path"
 import { fileURLToPath } from 'url';
 import validarBody from "../helpers/validar.js"
+import { emitirProductos } from "../config/socket.js"
 
 export const crearProducto = async (req, res) => {
 
@@ -119,7 +120,8 @@ export const editarProducto = async (req, res) => {
             }
         }
 
-       producto = await Producto.findByIdAndUpdate({_id: id}, nuevoProducto, {new: true})
+       producto = await Producto.findByIdAndUpdate({_id: id}, nuevoProducto, { returnDocument: "after" })
+       emitirProductos()
        res.json({producto})
    } catch (error) {
        console.log(error)
@@ -137,7 +139,7 @@ export const editarProductos = async (req, res) => {
     
         //modifico los productos a medida que se van recorriendo
         const productoCambiado = async (producto) => {
-            await Producto.findByIdAndUpdate({_id: producto._id}, producto , {new: true} )
+            await Producto.findByIdAndUpdate({_id: producto._id}, producto , { returnDocument: "after" } )
         }
 
         productos.forEach(producto => {
@@ -201,7 +203,7 @@ export const eliminarProducto = async (req, res) => {
         if(venta) {
             let ventaEditada = venta
             ventaEditada.existeProducto = false
-            await Venta.findOneAndUpdate({idProducto: id}, ventaEditada, {new: true})
+            await Venta.findOneAndUpdate({idProducto: id}, ventaEditada, { returnDocument: "after" })
         }
 
         //Eliminar la imagen del fontend

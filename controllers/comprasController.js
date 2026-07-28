@@ -1,5 +1,6 @@
 import Compra from "../models/Compra.js"
 import Producto from "../models/Producto.js"
+import { emitirCompras } from "../config/socket.js"
 
 
 export const crearCompra = async (req, res) => {
@@ -28,6 +29,7 @@ export const crearCompra = async (req, res) => {
             }
             const compra = new Compra(laCompra)
             await compra.save()
+            emitirCompras()
             res.json({compra})
         } 
         if (producto && req.body.cantidad ) {    //si existe el producto en el listado de compras y la cantidad es mayora a 0, edito el producto entero
@@ -42,6 +44,7 @@ export const crearCompra = async (req, res) => {
 
             const compra = new Compra(compraPasada)
             await compra.save()
+            emitirCompras()
             res.json({compra})
         }
         if(producto && !req.body.cantidad ) {   //si el producto existe en el listado de compras y no existe cantidad, es porque se modifico algun otro campo del objeto, entonces guardo solo lo modificado
@@ -51,7 +54,9 @@ export const crearCompra = async (req, res) => {
             compraPasada.modelo = modelo
             compraPasada.descripcion = (nombre + marca + modelo  + barras + factura + notas).replace(/\s\s+/g, ' ').replace(/\s+/g, '')
             const compra = new Compra(compraPasada)
-            compra.save()
+            await compra.save()
+            emitirCompras()
+            res.json({compra})
         }
     } catch (error) {
         console.log(error)

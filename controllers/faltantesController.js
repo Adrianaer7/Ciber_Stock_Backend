@@ -1,4 +1,5 @@
 import Producto from "../models/Producto.js";
+import { emitirProductos } from "../config/socket.js";
 
 export const crearFaltante = async (req, res, next) => {
   const { id } = req.params
@@ -17,7 +18,8 @@ export const crearFaltante = async (req, res, next) => {
       producto.limiteFaltante = producto.disponibles
       producto.añadirFaltante = true
 
-      producto = await Producto.findByIdAndUpdate({ _id: req.params.id }, producto, { new: true });
+      producto = await Producto.findByIdAndUpdate({ _id: req.params.id }, producto, { returnDocument: "after" });
+      emitirProductos()
       return res.json({ producto });
     }
     return next()
@@ -45,7 +47,8 @@ export const eliminarFaltante = async (req, res) => {
       producto.limiteFaltante = null
       producto.añadirFaltante = false
 
-      producto = await Producto.findByIdAndUpdate({ _id: id }, producto, { new: true });
+      producto = await Producto.findByIdAndUpdate({ _id: id }, producto, { returnDocument: "after" });
+      emitirProductos()
       return res.json({ msg: "Faltante eliminado", producto });
     }
 

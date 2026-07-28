@@ -1,4 +1,5 @@
 import Proveedor from "../models/Proveedor.js";
+import { emitirProductos } from "../config/socket.js";
 
 export const agregarProveedor = async (req, res) => {
   try {
@@ -8,6 +9,7 @@ export const agregarProveedor = async (req, res) => {
     proveedor.datos = (nombre + empresa + telPersonal + telEmpresa + email).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
     proveedor.creador = req.usuario.id;
     await proveedor.save();
+    emitirProductos()
     res.json({ proveedor });
   } catch (error) {
     console.log(error);
@@ -54,7 +56,8 @@ export const editarProveedor = async(req,res) => {
 
     const nuevoProveedor = req.body
     nuevoProveedor.datos = (nombre + empresa + telPersonal + telEmpresa + email).replace(/\s\s+/g, ' ').replace(/\s+/g, '')   //el primer replace quita 2 o mas espacio entre palabra y palabra y el ultimo quita los espacios
-    proveedor = await Proveedor.findByIdAndUpdate({_id: id}, nuevoProveedor, {new: true})
+    proveedor = await Proveedor.findByIdAndUpdate({_id: id}, nuevoProveedor, { returnDocument: "after" })
+    emitirProductos()
     res.json({proveedor})
   } catch (error) {
     console.log(error)
@@ -73,6 +76,7 @@ export const eliminarProveedor = async (req,res) => {
       return res.json({msg: "No se encontró el proveedor a eliminar"})
     }
     await Proveedor.findOneAndDelete({_id: id})
+    emitirProductos()
     res.json({msg: "Proveedor eliminado"})
   } catch (error) {
     console.log(error)

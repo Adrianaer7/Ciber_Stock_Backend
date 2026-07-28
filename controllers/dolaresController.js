@@ -42,14 +42,14 @@ export const editarManualmente = async (req, res) => {
     if (req.body.dolarManual) {
       const { dolarManual } = req.body
       const nuevoDolar = { ...dolarManual, automatico: false }
-      dolar = await Dolares.findByIdAndUpdate({ _id: dolar._id }, nuevoDolar, { new: true })
+      dolar = await Dolares.findByIdAndUpdate({ _id: dolar._id }, nuevoDolar, { returnDocument: "after" })
       return responderDolar(res, dolar)
     }
 
     dolar = await Dolares.findByIdAndUpdate(
       { _id: dolar._id },
       { automatico: true },
-      { new: true }
+      { returnDocument: "after" }
     )
     return responderDolar(res, dolar)
   } catch (error) {

@@ -1,11 +1,13 @@
 import Venta from "../models/Venta.js";
 import Producto from "../models/Producto.js";
+import { emitirProductos } from "../config/socket.js";
 
 export const agregarVenta = async (req, res) => {
   try {
     const venta = new Venta(req.body);
     venta.creador = req.usuario.id;
     await venta.save();
+    emitirProductos()
     res.json({ venta });
   } catch (error) {
     console.log(error);
@@ -58,12 +60,13 @@ export const editarVenta = async(req,res) => {
     //Devuelvo la unidad vendida al producto
     let nuevoProducto = producto
     nuevoProducto.disponibles = nuevoProducto.disponibles + cantidad
-    await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
+    await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, { returnDocument: "after" })
     
     //Descuento las unidades vendidas de la venta
     const nuevaVenta = venta
     nuevaVenta.unidades = nuevaVenta.unidades - cantidad
-    venta = await Venta.findByIdAndUpdate({_id: id}, nuevaVenta, {new: true})
+    venta = await Venta.findByIdAndUpdate({_id: id}, nuevaVenta, { returnDocument: "after" })
+    emitirProductos()
     res.json({venta})
   } catch (error) {
     console.log(error)
@@ -91,15 +94,17 @@ export const eliminarVenta = async (req,res) => {
     const producto = await Producto.findOne({_id: idProducto})
     if(!producto) {
       await Venta.findByIdAndDelete(id)
+      emitirProductos()
       return res.json({msg: "Venta eliminada (el producto ya no existía)"})
     }
 
     let nuevoProducto = producto
     nuevoProducto.disponibles = nuevoProducto.disponibles + unidades
     
-    await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, {new: true})
+    await Producto.findByIdAndUpdate({_id: idProducto}, nuevoProducto, { returnDocument: "after" })
     
     await Venta.findByIdAndDelete(id)
+    emitirProductos()
     return res.json({msg: "Venta eliminada"})
   } catch (error) {
     console.log(error)

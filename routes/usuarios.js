@@ -1,5 +1,6 @@
 import express from "express"
 import { check } from "express-validator";
+import rateLimit from "express-rate-limit"
 import auth from "../middleware/auth.js";
 
 import  {
@@ -12,8 +13,17 @@ import  {
     eliminarUsuario
 } from  "../controllers/usuarioController.js"
 
+const registroLimiter = rateLimit({
+    windowMs: 10 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { msg: "Demasiadas solicitudes. Intentá de nuevo en unos segundos." }
+})
+
 const router = express.Router()
 router.post("/",
+    registroLimiter,
     [
         check("nombre", "El nombre es obligatorio").not().isEmpty(),
         check("email", "El email tiene que ser valido").isEmail(),
