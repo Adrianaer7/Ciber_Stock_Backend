@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import dotenv from "dotenv"
-dotenv.config({path: "variables.env"})
+dotenv.config({path: "variables.env", quiet: true})
 
 const conectarDB = async () => {
     try {   

@@ -27,6 +27,7 @@ router.get("/",
 )
 
 router.get("/:id",
+    auth,
     elProducto
 )
 

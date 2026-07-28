@@ -23,7 +23,7 @@ import {
   garantiasRouter
 } from "./pathroutes/allRoutes.js"
 
-dotenv.config({ path: "variables.env" })
+dotenv.config({ path: "variables.env", quiet: true })
 conectarDB();
 
 const app = express();

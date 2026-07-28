@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-dotenv.config({path: "variables.env"})
+dotenv.config({path: "variables.env", quiet: true})
 
 //Settings CORS
 const whitelist = [process.env.FRONTEND_URL]

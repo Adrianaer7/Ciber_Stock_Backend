@@ -58,6 +58,10 @@ export const elProducto = async (req, res) => {
         if(!producto) {
             return res.json({redireccionar: true})
         }
+
+        if (producto.creador.toString() !== req.usuario.id) {
+            return res.status(403).json({ msg: "No autorizado", redireccionar: true })
+        }
         
         return res.json({producto})
     } catch (error) {

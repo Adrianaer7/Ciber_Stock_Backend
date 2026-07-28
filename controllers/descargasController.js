@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import pdf from "html-pdf"
 import fs from "fs"
 import {generarFecha} from "../helpers/generar.js"
-dotenv.config({path: 'variables.env'}) 
+dotenv.config({path: 'variables.env', quiet: true}) 
 
 
 export const generarPDF = async(req,res, next) => {
