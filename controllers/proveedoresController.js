@@ -72,7 +72,7 @@ export const eliminarProveedor = async (req,res) => {
     if(!proveedor) {
       return res.json({msg: "No se encontró el proveedor a eliminar"})
     }
-    await Proveedor.findOneAndRemove({_id: id})
+    await Proveedor.findOneAndDelete({_id: id})
     res.json({msg: "Proveedor eliminado"})
   } catch (error) {
     console.log(error)

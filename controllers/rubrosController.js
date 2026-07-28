@@ -103,7 +103,7 @@ export const eliminarRubro = async (req,res) => {
     if(!rubro) {
       return res.json({msg: "No se encontró el rubro a eliminar"})
     }
-    await Rubro.findOneAndRemove({_id: id})
+    await Rubro.findOneAndDelete({_id: id})
     res.json({msg: "Rubro eliminado"})
   } catch (error) {
     console.log(error)

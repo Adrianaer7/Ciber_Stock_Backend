@@ -74,7 +74,7 @@ import Porcentaje from "../models/Porcentaje.js";
     if(!porcentaje) {
       return res.json({msg: "No se encontró el porcentaje a eliminar"})
     }
-    await Porcentaje.findOneAndRemove({_id: id})
+    await Porcentaje.findOneAndDelete({_id: id})
     res.json({msg: "Porcentaje eliminado"})
   } catch (error) {
     console.log(error)

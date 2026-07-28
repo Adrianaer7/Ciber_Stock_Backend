@@ -24,7 +24,7 @@ const auth = async (req, res, next) => {
             return res.status(401).json({msg: "Token no valido"})  //por si manda un token que expiró, o intenta adivinar el token
         }
     } else {
-        res.status(401).json({msg: "No hay token. Permiso no valido"})  
+        return res.status(401).json({msg: "No hay token. Permiso no valido"})  
     }
 }
 

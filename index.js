@@ -2,6 +2,8 @@ import express from "express"
 import conectarDB from "./config/db.js"
 import cors from "cors"
 import dotenv from "dotenv"
+import helmet from "helmet"
+import rateLimit from "express-rate-limit"
 import corsOptions from "./config/cors.js"
 
 import {
@@ -21,30 +23,31 @@ import {
   garantiasRouter
 } from "./pathroutes/allRoutes.js"
 
-//Conectar a la DB
-conectarDB();  
+dotenv.config({ path: "variables.env" })
+conectarDB();
 
-//Importar las .env
-dotenv.config({path: "variables.env"})
-
-//Crear el servidor
 const app = express();
 
-//CORS
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}))
 app.use(cors(corsOptions))
-
-//Habilitar leer los valores de un body
-app.use(express.json());
-
-//Habilitar carpeta pública. De esta manera puedo acceder a los archivos que hay en la carpeta uploads poniendo el nombre del archivo en la url. Lo hago en [enlace].js
+app.use(express.json({ limit: "5mb" }));
 app.use(express.static("uploads"))
 
-//Puerto de la app. Cuando haga el deployment en Heroku se espera que la variable de entorno se llame PORT
-const PORT = process.env.PORT || 4000 
+// Rate limit en auth/registro (alineado con Nest Throttler)
+const authLimiter = rateLimit({
+  windowMs: 10 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { msg: "Demasiadas solicitudes. Intentá de nuevo en unos segundos." }
+})
 
-//Rutas de la app
-app.use("/api/usuarios", usuariosRouter)
-app.use("/api/auth", authRouter)
+const PORT = process.env.PORT || 4000
+
+app.use("/api/usuarios", authLimiter, usuariosRouter)
+app.use("/api/auth", authLimiter, authRouter)
 app.use("/api/productos", productosRouter)
 app.use("/api/imagenes", imagenesRouter)
 app.use("/api/rubros", rubrosRouter);
@@ -58,8 +61,17 @@ app.use("/api/descargas", descargasRouter);
 app.use("/api/codigos", codigosRouter);
 app.use("/api/garantias", garantiasRouter);
 
+// Middleware de errores no capturados
+app.use((err, req, res, next) => {
+  console.error(err)
+  if (res.headersSent) return next(err)
+  res.status(500).json({ msg: err.message || "Error interno del servidor" })
+})
 
-//Arrancar la app
-app.listen(PORT, () => {
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
     console.log(`El servidor esta funcionando en el puerto ${PORT}`)
-});
+  });
+}
+
+export default app

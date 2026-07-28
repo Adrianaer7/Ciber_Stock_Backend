@@ -11,8 +11,7 @@ import validarBody from "../helpers/validar.js"
 
 export const nuevoUsuario = async (req, res) => {
 
-    //Mostrar mensajes de error
-    validarBody(req, res)
+    if (!validarBody(req, res)) return
     
     //Verificar si el usuario ya existe
     const {email} = req.body 
@@ -29,7 +28,7 @@ export const nuevoUsuario = async (req, res) => {
         await usuario.save()
 
         //Enviar el email de confirmacion
-        emailRegistro({
+        await emailRegistro({
             email: usuario.email,
             nombre: usuario.nombre,
             token: usuario.token
@@ -38,6 +37,7 @@ export const nuevoUsuario = async (req, res) => {
         res.json({msg: "Usuario creado correctamente. Revise su email para activar su cuenta."})
     } catch (error) {
         console.log(error)
+        return res.status(500).json({msg: "Hubo un error al crear el usuario"})
         res.status(400).send("Hubo un error")
     }
 }
@@ -74,8 +74,7 @@ export const olvidePassword = async (req, res) => {
         usuario.token = generarId()
         await usuario.save()
 
-        //Enviar el email de confirmacion
-        emailOlvidePassword({
+        await emailOlvidePassword({
             email: usuario.email,
             nombre: usuario.nombre,
             token: usuario.token
@@ -84,6 +83,7 @@ export const olvidePassword = async (req, res) => {
         res.json({msg: "Se han enviado instrucciones a tu email"})
     } catch (error) {
         console.log(error)
+        return res.status(500).json({msg: "Hubo un error al solicitar el reset"})
     }
 }
 

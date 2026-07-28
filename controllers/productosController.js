@@ -10,15 +10,17 @@ import validarBody from "../helpers/validar.js"
 
 export const crearProducto = async (req, res) => {
 
-    //Revisar si hay errores
-    validarBody(req, res)
+    if (!validarBody(req, res)) return
 
     try {
         const { codigo, nombre, marca, modelo, barras, proveedor, notas } = req.body;
         
         const producto = new Producto(req.body);
         producto.creador = req.usuario.id;
-        producto.todos_proveedores = proveedor.trim() || [] //si no envio un proveedor lo dejo vacio
+        // proveedor puede ser string id o vacío; normalizar a array
+        producto.todos_proveedores = proveedor
+            ? (Array.isArray(proveedor) ? proveedor : [proveedor])
+            : []
         
         
         if(producto.disponibles <= producto.limiteFaltante && producto.añadirFaltante) { //si el stock es menor o igual que el numero de alerta que le puse y el botón de alerta esta activado, lo pongo como faltante. Si no pongo la condicion de añadirFaltante, el stock puede ser 0 y limite 0 y me lo va a agregar automaticamente a faltante
@@ -57,9 +59,10 @@ export const elProducto = async (req, res) => {
             return res.json({redireccionar: true})
         }
         
-        res.json({producto})
+        return res.json({producto})
     } catch (error) {
         console.log(error)
+        return res.status(500).json({msg: "Error al obtener el producto"})
     }
 }
 
@@ -209,7 +212,7 @@ export const eliminarProducto = async (req, res) => {
         }
 
         //eliminar el producto
-        await Producto.findOneAndRemove({_id: id})
+        await Producto.findOneAndDelete({_id: id})
         res.json({msg: "Producto eliminado"})
     } catch (error) {
         console.log(error)
